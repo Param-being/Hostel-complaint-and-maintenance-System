@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HostelCare | Complaint Management</title>
+    <link rel="stylesheet" href="Landing.css">
+</head>
+<body>
+
+    <nav class="navbar">
+    <div class="logo">Hostel<span>Care</span></div>
+    
+    <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+
+        <li class="dropdown">
+            <button class="dropbtn-action">Complaints ▼</button>
+            <div class="dropdown-content status-dropdown">
+                <a href="file-complaint.html">📝 File New Complaint</a>
+                <hr>
+                <div class="status-search-box">
+                    <p>Track Status:</p>
+                    <div class="status-input-group">
+                        <input type="text" placeholder="Complaint ID..." id="statusID">
+                        <button onclick="checkStatus()">Go</button>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li class="dropdown">
+            <button class="dropbtn-secondary">Select Hostel ▼</button>
+            <div class="dropdown-content">
+                <a href="#">Boys Hostel (BH-1)</a>
+                <a href="#">Girls Hostel (GH-1)</a>
+            </div>
+        </li>
+
+        <li class="dropdown">
+            <button class="dropbtn">Login Portal ▼</button>
+            <div class="dropdown-content">
+                <a href="student-login.html">Student Login</a>
+                <a href="worker-login.html">Worker Login</a>
+                <a href="admin-login.html">Admin Login</a>
+            </div>
+        </li>
+
+        <li><a href="#" class="btn-sos">SOS</a></li>
+    </ul>
+</nav>
+    
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Fix Your Hostel Issues <br><span>Faster Than Ever</span></h1>
+            <p>Don't wait in lines to report a leaking tap or broken light. File your complaint online and track it in real-time.</p>
+            <div class="hero-btns">
+                <a href="#" class="btn-primary">File a Complaint</a>
+                <a href="#" class="btn-secondary">Admin Portal</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+    <h2>SMART MAINTENANCE SYSTEM</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>📸 Photo Evidence</h3>
+            <p>Students upload photos of the issue for faster diagnosis.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🛠️ Worker Integration</h3>
+            <p>Dedicated portal for staff to receive and update tasks.</p>
+        </div>
+        <div class="feature-card">
+            <h3>✅ Visual Clearance</h3>
+            <p>Complaints are only closed after workers upload "Fixed" photos.</p>
+        </div>
+    </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 HostelCare System | Built By Paramjibi Sutar</p>
+    </footer>
+
+</body>
+</html>
