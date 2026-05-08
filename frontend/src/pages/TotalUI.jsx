@@ -1,8 +1,8 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { io } from "socket.io-client";
 
-const API = "http://localhost:5000/api";
-const socket = io("http://localhost:5000");
+const API = " https://hostelcare-backend-w0ps.onrender.com";
+const socket = io("https://hostelcare-backend-w0ps.onrender.com");
 
 // ─── THEME CONTEXT ────────────────────────────────────────────────────────────
 const ThemeContext = createContext(null);
