@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HostelCare — Dashboard</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@300,400,500,700,800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--tr:0.35s cubic-bezier(0.4,0,0.2,1);}
+
+[data-theme="dark"]{
+  --bg:#07090f; --surface:#0d1020; --surface2:#111528;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+  --accent:#5b8ff9; --accent2:#a78bfa; --green:#22d37a; --red:#f05252; --amber:#f59e0b;
+  --aglow:rgba(91,143,249,0.18); --gglow:rgba(34,211,122,0.18); --rglow:rgba(240,82,82,0.18);
+  --thi:#eef1fc; --tmd:#7d8aaa; --tlo:#3a4260;
+  --sidebar:#080b16; --topbar:#0a0d1a;
+  --card:#0f1322; --card2:#131728;
+  --sbw:220px;
+}
+[data-theme="light"]{
+  --bg:#f0f2f9; --surface:#ffffff; --surface2:#f7f8fc;
+  --border:rgba(0,0,0,0.07); --border2:rgba(0,0,0,0.13);
+  --accent:#2d62f5; --accent2:#7c3aed; --green:#16a34a; --red:#dc2626; --amber:#d97706;
+  --aglow:rgba(45,98,245,0.14); --gglow:rgba(22,163,74,0.14); --rglow:rgba(220,38,38,0.14);
+  --thi:#0d1530; --tmd:#4a5578; --tlo:#9aa3c0;
+  --sidebar:#ffffff; --topbar:#ffffff;
+  --card:#ffffff; --card2:#f7f8fc;
+  --sbw:220px;
+}
+
+html,body{height:100%;overflow:hidden;font-family:'Cabinet Grotesk',sans-serif;background:var(--bg);color:var(--thi);transition:background var(--tr),color var(--tr);}
+
+/* ══ LAYOUT ══ */
+.app{display:flex;height:100vh;width:100vw;overflow:hidden;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sbw);flex-shrink:0;
+  background:var(--sidebar);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transition:background var(--tr),border-color var(--tr);
+  position:relative;z-index:10;
+}
+
+.sb-brand{
+  padding:1.4rem 1.3rem 1.2rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+}
+.sb-logo{
+  width:34px;height:34px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px var(--aglow);
+}
+.sb-logo svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;}
+.sb-title{font-family:'Clash Display',sans-serif;font-size:1.1rem;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* Role switcher */
+.role-switcher{
+  padding:0.9rem 1rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.role-label{font-size:0.6rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--tlo);margin-bottom:6px;}
+.role-pills{display:flex;flex-direction:column;gap:4px;}
+.role-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 10px;border-radius:8px;
+  border:1px solid transparent;
+  cursor:pointer;transition:all 0.2s;
+  background:none;color:var(--tmd);
+  font-family:'Cabinet Grotesk',sans-serif;font-size:0.8rem;font-weight:500;
+  width:100%;text-align:left;
+}
+.role-pill:hover{background:var(--surface2);color:var(--thi);}
+.role-pill.active{background:var(--aglow);border-color:var(--accent);color:var(--accent);}
+.role-pill .ricon{font-size:14px;width:20px;text-align:center;}
+.role-pill .rbadge{margin-left:auto;background:var(--accent);color:#fff;font-size:0.58rem;padding:1px 6px;border-radius:100px;font-weight:700;}
+
+/* Nav */
+.sb-nav{flex:1;overflow-y:auto;padding:0.8rem 0.8rem;display:flex;flex-direction:column;gap:2px;}
+.nav-section-title{font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--tlo);padding:0.6rem 0.5rem 0.3rem;margin-top:0.4rem;}
+.nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:9px;
+  cursor:pointer;transition:all 0.18s;
+  color:var(--tmd);font-size:0.82rem;font-weight:500;
+}
+.nav-item:hover{background:var(--surface2);color:var(--thi);}
+.nav-item.active{background:linear-gradient(135deg,var(--aglow),rgba(167,139,250,0.1));color:var(--thi);border:1px solid var(--border2);}
+.nav-item svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex-shrink:0;}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:auto;animation:dotPulse 2s infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+
+.sb-footer{
+  padding:0.9rem 1rem;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.user-chip{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 9px;border-radius:9px;
+  background:var(--surface2);border:1px solid var(--border);
+}
+.avatar{
+  width:30px;height:30px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:0.78rem;font-weight:700;color:var(--thi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-role{font-size:0.62rem;color:var(--tlo);}
+.live-badge{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:livePulse 2.2s ease-in-out infinite;}
+@keyframes livePulse{0%,100%{box-shadow:0 0 0 0 rgba(34,211,122,0.5)}60%{box-shadow:0 0 0 4px rgba(34,211,122,0)}}
+
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* Topbar */
+.topbar{
+  height:58px;flex-shrink:0;
+  background:var(--topbar);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 1.5rem;gap:1rem;
+  transition:background var(--tr),border-color var(--tr);
+}
+.topbar-title{font-family:'Clash Display',sans-serif;font-size:1rem;font-weight:600;color:var(--thi);flex:1;}
+.topbar-title span{color:var(--tmd);font-weight:400;font-size:0.82rem;margin-left:8px;}
+
+.search-box{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:9px;padding:6px 12px;width:220px;
+  transition:border-color 0.2s,background var(--tr);
+}
+.search-box:focus-within{border-color:var(--accent);}
+.search-box svg{width:13px;height:13px;fill:none;stroke:var(--tlo);stroke-width:2;stroke-linecap:round;flex-shrink:0;}
+.search-box input{background:none;border:none;outline:none;font-family:'Cabinet Grotesk',sans-serif;font-size:0.8rem;color:var(--thi);width:100%;}
+.search-box input::placeholder{color:var(--tlo);}
+
+.topbar-actions{display:flex;align-items:center;gap:8px;}
+.icon-btn{
+  width:34px;height:34px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.18s;color:var(--tmd);
+  position:relative;
+}
+.icon-btn:hover{border-color:var(--accent);color:var(--thi);}
+.icon-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--topbar);}
+
+.theme-toggle{
+  display:flex;align-items:center;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:100px;padding:3px;cursor:pointer;transition:border-color var(--tr);
+}
+.theme-toggle:hover{border-color:var(--accent);}
+.t-opt{width:26px;height:26px;border-radius:100px;display:flex;align-items:center;justify-content:center;transition:all 0.22s;}
+.t-opt svg{width:12px;height:12px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.22s;}
+.t-opt.active{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 2px 8px var(--aglow);}
+.t-opt.active svg{stroke:#fff;}
+.t-opt:not(.active) svg{stroke:var(--tlo);}
+
+/* Content area */
+.content{flex:1;overflow-y:auto;padding:1.4rem 1.5rem;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+
+/* ══ DASHBOARD VIEWS ══ */
+.view{display:none;animation:fadeUp 0.4s ease both;}
+.view.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Stats row */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.9rem;margin-bottom:1.2rem;}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:1.1rem 1.2rem;position:relative;overflow:hidden;
+  transition:background var(--tr),border-color var(--tr);
+}
+.stat-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:var(--glow-c,var(--aglow));filter:blur(25px);pointer-events:none;}
+.stat-card:nth-child(1){--glow-c:var(--aglow);}
+.stat-card:nth-child(2){--glow-c:rgba(240,82,82,0.12);}
+.stat-card:nth-child(3){--glow-c:rgba(245,158,11,0.12);}
+.stat-card:nth-child(4){--glow-c:var(--gglow);}
+.stat-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--tlo);margin-bottom:0.5rem;}
+.stat-val{font-family:'Clash Display',sans-serif;font-size:1.9rem;font-weight:700;color:var(--thi);line-height:1;}
+.stat-sub{font-size:0.7rem;color:var(--tmd);margin-top:4px;}
+.stat-icon{position:absolute;bottom:0.9rem;right:1rem;font-size:1.6rem;opacity:0.15;}
+
+/* Section header */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.9rem;}
+.section-title{font-family:'Clash Display',sans-serif;font-size:0.95rem;font-weight:600;color:var(--thi);}
+.section-title small{font-family:'Cabinet Grotesk',sans-serif;font-size:0.72rem;font-weight:400;color:var(--tlo);margin-left:6px;}
+.btn-sm{
+  padding:5px 12px;border-radius:7px;border:none;cursor:pointer;
+  font-family:'Cabinet Grotesk',sans-serif;font-size:0.75rem;font-weight:700;
+  transition:all 0.18s;
+}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 3px 12px var(--aglow);}
+.btn-primary:hover{opacity:0.88;transform:translateY(-1px);}
+.btn-ghost{background:var(--surface2);color:var(--tmd);border:1px solid var(--border);}
+.btn-ghost:hover{color:var(--thi);border-color:var(--border2);}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;}
+.filter-chip{
+  padding:4px 12px;border-radius:100px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--tmd);
+  font-size:0.73rem;font-weight:500;cursor:pointer;transition:all 0.18s;
+}
+.filter-chip:hover{border-color:var(--accent);color:var(--thi);}
+.filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 10px var(--aglow);}
+
+/* ══ TICKET TABLE ══ */
+.ticket-table{width:100%;border-collapse:collapse;}
+.ticket-table th{
+  font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--tlo);padding:0 1rem 0.6rem;text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.ticket-table td{
+  padding:0.85rem 1rem;border-bottom:1px solid var(--border);
+  font-size:0.82rem;color:var(--tmd);vertical-align:middle;
+}
+.ticket-table tr:last-child td{border-bottom:none;}
+.ticket-table tbody tr{transition:background 0.15s;cursor:pointer;}
+.ticket-table tbody tr:hover td{background:var(--surface2);}
+
+.tid{font-family:'Clash Display',sans-serif;font-size:0.78rem;font-weight:600;color:var(--accent);}
+.issue-cell{display:flex;flex-direction:column;gap:2px;}
+.issue-title{font-size:0.82rem;font-weight:600;color:var(--thi);}
+.issue-loc{font-size:0.7rem;color:var(--tlo);}
+.cat-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;border-radius:100px;font-size:0.68rem;font-weight:700;
+}
+.cat-electrical{background:rgba(245,158,11,0.12);color:#f59e0b;}
+.cat-plumbing{background:rgba(59,130,246,0.12);color:#60a5fa;}
+.cat-furniture{background:rgba(167,139,250,0.12);color:#a78bfa;}
+.cat-civil{background:rgba(34,211,122,0.12);color:#22d37a;}
+.cat-cleaning{background:rgba(236,72,153,0.12);color:#ec4899;}
+
+.status-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:100px;font-size:0.7rem;font-weight:700;
+}
+.status-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
+.status-open{background:rgba(91,143,249,0.12);color:var(--accent);}
+.status-assigned{background:rgba(245,158,11,0.12);color:#f59e0b;}
+.status-inprogress{background:rgba(167,139,250,0.12);color:#a78bfa;}
+.status-resolved{background:rgba(34,211,122,0.12);color:var(--green);}
+.status-closed{background:rgba(100,116,139,0.12);color:#64748b;}
+
+.priority-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:0.68rem;font-weight:700;
+}
+.pri-critical{color:var(--red);}
+.pri-high{color:#f59e0b;}
+.pri-medium{color:var(--accent);}
+.pri-low{color:var(--tlo);}
+.pri-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+.action-btns{display:flex;gap:5px;}
+.action-btn{
+  width:28px;height:28px;border-radius:6px;border:1px solid var(--border);
+  background:var(--surface2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.15s;color:var(--tmd);
+}
+.action-btn:hover{border-color:var(--accent);color:var(--accent);}
+.action-btn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+
+/* Upload zone (worker) */
+.upload-zone{
+  border:2px dashed var(--border2);border-radius:12px;
+  padding:1.5rem;text-align:center;cursor:pointer;
+  transition:border-color 0.2s,background 0.2s;
+  background:var(--surface2);
+}
+.upload-zone:hover{border-color:var(--accent);background:var(--aglow);}
+.upload-zone svg{width:28px;height:28px;fill:none;stroke:var(--tlo);stroke-width:1.5;stroke-linecap:round;margin:0 auto 0.5rem;}
+.upload-zone p{font-size:0.78rem;color:var(--tlo);}
+.upload-zone span{color:var(--accent);font-weight:600;}
+
+/* Ticket detail panel (slide-in) */
+.detail-panel{
+  position:fixed;top:0;right:0;width:400px;height:100vh;
+  background:var(--surface);border-left:1px solid var(--border2);
+  z-index:100;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.detail-panel.open{transform:translateX(0);}
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.panel-overlay.open{opacity:1;pointer-events:all;}
+
+.panel-topbar{
+  padding:1.2rem 1.3rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.panel-title{font-family:'Clash Display',sans-serif;font-size:0.95rem;font-weight:600;color:var(--thi);}
+.close-btn{width:28px;height:28px;border-radius:7px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tmd);transition:all 0.18s;}
+.close-btn:hover{color:var(--thi);}
+.close-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+
+.panel-body{flex:1;overflow-y:auto;padding:1.2rem 1.3rem;display:flex;flex-direction:column;gap:1.1rem;}
+.panel-body::-webkit-scrollbar{width:3px;}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+.info-block{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:0.8rem;}
+.info-block-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--tlo);margin-bottom:4px;}
+.info-block-val{font-size:0.82rem;font-weight:600;color:var(--thi);}
+
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:10px;padding-bottom:1rem;position:relative;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item::before{content:'';position:absolute;left:11px;top:20px;bottom:0;width:1px;background:var(--border);}
+.tl-item:last-child::before{display:none;}
+.tl-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);background:var(--card2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;z-index:1;}
+.tl-dot.active{background:var(--accent);border-color:var(--accent);}
+.tl-dot.done{background:var(--green);border-color:var(--green);}
+.tl-text{flex:1;padding-top:2px;}
+.tl-label{font-size:0.78rem;font-weight:600;color:var(--thi);}
+.tl-time{font-size:0.68rem;color:var(--tlo);}
+
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+.photo-slot{
+  aspect-ratio:4/3;border-radius:10px;border:1px dashed var(--border2);
+  background:var(--card2);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;cursor:pointer;
+  transition:border-color 0.2s;
+}
+.photo-slot:hover{border-color:var(--accent);}
+.photo-slot svg{width:20px;height:20px;fill:none;stroke:var(--tlo);stroke-width:1.5;stroke-linecap:round;}
+.photo-slot p{font-size:0.65rem;color:var(--tlo);text-align:center;}
+.photo-slot.has-photo{border-style:solid;border-color:var(--green);background:var(--gglow);}
+.photo-slot.has-photo svg{stroke:var(--green);}
+.photo-slot.has-photo p{color:var(--green);}
+
+.panel-actions{
+  padding:1rem 1.3rem;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:0.6rem;flex-shrink:0;
+}
+.btn-full{
+  width:100%;padding:10px;border-radius:9px;border:none;
+  font-family:'Cabinet Grotesk',sans-serif;font-size:0.85rem;font-weight:700;
+  cursor:pointer;transition:all 0.18s;
+}
+.btn-success{background:var(--green);color:#fff;box-shadow:0 3px 12px var(--gglow);}
+.btn-success:hover{opacity:0.88;transform:translateY(-1px);}
+.btn-danger{background:rgba(240,82,82,0.1);color:var(--red);border:1px solid rgba(240,82,82,0.25);}
+.btn-danger:hover{background:rgba(240,82,82,0.18);}
+
+/* 2-col layout for content */
+.two-col{display:grid;grid-template-columns:1fr 340px;gap:1rem;align-items:start;}
+.col-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;transition:background var(--tr),border-color var(--tr);}
+
+/* SOS card */
+.sos-card{
+  background:rgba(240,82,82,0.06);border:1px solid rgba(240,82,82,0.2);
+  border-radius:14px;padding:1rem 1.2rem;
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+  transition:all 0.2s;margin-bottom:1rem;
+}
+.sos-card:hover{background:rgba(240,82,82,0.12);border-color:rgba(240,82,82,0.35);}
+.sos-ic{width:36px;height:36px;background:var(--red);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:sosPulse 1.8s ease-in-out infinite;}
+@keyframes sosPulse{0%,100%{box-shadow:0 0 0 0 rgba(240,82,82,0.5)}50%{box-shadow:0 0 0 8px rgba(240,82,82,0)}}
+.sos-ic svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;}
+.sos-info{flex:1;}
+.sos-info strong{font-size:0.85rem;font-weight:700;color:var(--red);display:block;font-family:'Clash Display',sans-serif;}
+.sos-info span{font-size:0.72rem;color:var(--tlo);}
+
+/* Assign dropdown */
+.assign-select{
+  width:100%;padding:7px 10px;border-radius:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--thi);font-family:'Cabinet Grotesk',sans-serif;font-size:0.8rem;outline:none;cursor:pointer;
+}
+.assign-select:focus{border-color:var(--accent);}
+
+/* Activity feed */
+.activity-feed{display:flex;flex-direction:column;gap:0.6rem;}
+.act-item{
+  display:flex;align-items:flex-start;gap:9px;
+  padding:0.7rem 0.9rem;border-radius:10px;
+  background:var(--surface2);border:1px solid var(--border);
+  transition:border-color 0.15s;
+}
+.act-item:hover{border-color:var(--border2);}
+.act-avatar{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:#fff;flex-shrink:0;}
+.act-body{flex:1;min-width:0;}
+.act-msg{font-size:0.78rem;color:var(--thi);line-height:1.4;}
+.act-msg strong{color:var(--accent);}
+.act-time{font-size:0.65rem;color:var(--tlo);margin-top:2px;}
+
+/* Worker task card */
+.task-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:1.1rem;transition:all 0.2s;cursor:pointer;margin-bottom:0.8rem;
+}
+.task-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.task-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:0.7rem;}
+.task-id{font-family:'Clash Display',sans-serif;font-size:0.72rem;color:var(--accent);font-weight:600;}
+.task-title{font-size:0.88rem;font-weight:700;color:var(--thi);margin-bottom:2px;}
+.task-loc{font-size:0.72rem;color:var(--tlo);display:flex;align-items:center;gap:4px;}
+.task-loc svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+.task-meta{display:flex;align-items:center;gap:8px;margin-top:0.7rem;flex-wrap:wrap;}
+.task-deadline{font-size:0.7rem;color:var(--amber);display:flex;align-items:center;gap:4px;font-weight:600;}
+.task-deadline svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+.task-progress{margin-top:0.8rem;}
+.prog-label{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--tlo);margin-bottom:4px;}
+.prog-bar{height:4px;background:var(--surface2);border-radius:4px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s ease;}
+
+/* Empty state */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--tlo);}
+.empty-state svg{width:40px;height:40px;fill:none;stroke:var(--tlo);stroke-width:1.5;stroke-linecap:round;margin:0 auto 0.8rem;}
+.empty-state p{font-size:0.85rem;}
+
+/* Notification badge */
+.notif-badge{background:var(--red);color:#fff;font-size:0.6rem;font-weight:700;padding:1px 5px;border-radius:100px;margin-left:auto;}
+
+/* Responsive table wrap */
+.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <span class="sb-title">HostelCare</span>
+  </div>
+
+  <!-- Role Switcher -->
+  <div class="role-switcher">
+    <div class="role-label">Switch Role</div>
+    <div class="role-pills">
+      <button class="role-pill" onclick="switchRole('student')"><span class="ricon">🎓</span>Student<span class="rbadge" id="student-badge">3</span></button>
+      <button class="role-pill" onclick="switchRole('worker')"><span class="ricon">🔧</span>Worker<span class="rbadge" id="worker-badge">5</span></button>
+      <button class="role-pill" onclick="switchRole('admin')"><span class="ricon">🛡</span>Admin<span class="rbadge" id="admin-badge">12</span></button>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="sb-nav" id="sidebar-nav"></nav>
+
+  <div class="sb-footer">
+    <div class="user-chip">
+      <div class="avatar" id="user-avatar">RA</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name">Rahul Arora</div>
+        <div class="user-role" id="user-role-label">Student · BH-1</div>
+      </div>
+      <div class="live-badge"></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">My Tickets <span id="topbar-sub">Tracking your complaints</span></div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search tickets…"/>
+    </div>
+    <div class="topbar-actions">
+      <div class="icon-btn" title="Notifications">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <div class="t-opt active" id="moonOpt"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div>
+        <div class="t-opt" id="sunOpt"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ══ STUDENT VIEW ══ -->
+    <div class="view active" id="view-student">
+      <!-- SOS -->
+      <div class="sos-card" onclick="triggerSOS()">
+        <div class="sos-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+        <div class="sos-info"><strong>Emergency SOS</strong><span>Tap to broadcast alert to security & all admins instantly</span></div>
+        <span style="color:var(--red);font-size:13px;opacity:0.6">→</span>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Total Filed</div><div class="stat-val">7</div><div class="stat-sub">Since joining</div><div class="stat-icon">📋</div></div>
+        <div class="stat-card"><div class="stat-label">Open</div><div class="stat-val" style="color:var(--accent)">2</div><div class="stat-sub">Awaiting action</div><div class="stat-icon">🔓</div></div>
+        <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-val" style="color:#a78bfa">3</div><div class="stat-sub">Being worked on</div><div class="stat-icon">⚙️</div></div>
+        <div class="stat-card"><div class="stat-label">Resolved</div><div class="stat-val" style="color:var(--green)">2</div><div class="stat-sub">Completed</div><div class="stat-icon">✅</div></div>
+      </div>
+
+      <!-- Filters + Table -->
+      <div class="section-hdr">
+        <div class="section-title">My Complaints <small>7 total</small></div>
+        <button class="btn-sm btn-primary" onclick="openNewComplaint()">+ New Complaint</button>
+      </div>
+      <div class="filter-bar">
+        <div class="filter-chip active" onclick="filterTickets(this,'all')">All</div>
+        <div class="filter-chip" onclick="filterTickets(this,'open')">Open</div>
+        <div class="filter-chip" onclick="filterTickets(this,'assigned')">Assigned</div>
+        <div class="filter-chip" onclick="filterTickets(this,'inprogress')">In Progress</div>
+        <div class="filter-chip" onclick="filterTickets(this,'resolved')">Resolved</div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="ticket-table">
+          <thead>
+            <tr>
+              <th>Ticket ID</th><th>Issue</th><th>Category</th><th>Priority</th><th>Status</th><th>Filed</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="student-tickets">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ WORKER VIEW ══ -->
+    <div class="view" id="view-worker">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Assigned</div><div class="stat-val" style="color:var(--accent)">5</div><div class="stat-sub">Active tasks</div><div class="stat-icon">📌</div></div>
+        <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-val" style="color:var(--green)">28</div><div class="stat-sub">This month</div><div class="stat-icon">✅</div></div>
+        <div class="stat-card"><div class="stat-label">Avg. Time</div><div class="stat-val">1.4h</div><div class="stat-sub">Per task</div><div class="stat-icon">⏱</div></div>
+        <div class="stat-card"><div class="stat-label">Rating</div><div class="stat-val" style="color:#f59e0b">4.8</div><div class="stat-sub">⭐ From admins</div><div class="stat-icon">⭐</div></div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="section-hdr">
+            <div class="section-title">My Assigned Tasks <small>5 pending</small></div>
+            <div style="display:flex;gap:6px">
+              <button class="btn-sm btn-ghost">Sort by Priority</button>
+            </div>
+          </div>
+          <div id="worker-tasks"></div>
+        </div>
+
+        <div>
+          <div class="col-card" style="margin-bottom:1rem;">
+            <div class="section-title" style="margin-bottom:0.9rem;">Upload Clearance Photo</div>
+            <p style="font-size:0.75rem;color:var(--tlo);margin-bottom:0.8rem;">Select a ticket first, then upload the "After" photo to mark as resolved.</p>
+            <div class="upload-zone" onclick="this.classList.toggle('uploading')">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <p>Drop photo here or <span>browse</span></p>
+            </div>
+          </div>
+          <div class="col-card">
+            <div class="section-title" style="margin-bottom:0.9rem;">Recent Activity</div>
+            <div class="activity-feed" id="worker-activity"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ADMIN VIEW ══ -->
+    <div class="view" id="view-admin">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">All Tickets</div><div class="stat-val">47</div><div class="stat-sub">BH-1 total</div><div class="stat-icon">🏢</div></div>
+        <div class="stat-card"><div class="stat-label">Unassigned</div><div class="stat-val" style="color:var(--red)">8</div><div class="stat-sub">Need attention</div><div class="stat-icon">🚨</div></div>
+        <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-val" style="color:#a78bfa">21</div><div class="stat-sub">Active</div><div class="stat-icon">⚙️</div></div>
+        <div class="stat-card"><div class="stat-label">Resolved</div><div class="stat-val" style="color:var(--green)">18</div><div class="stat-sub">Needs verification</div><div class="stat-icon">📸</div></div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="section-hdr">
+            <div class="section-title">All Hostel Tickets <small>BH-1 · 47 total</small></div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn-sm btn-ghost">Export</button>
+              <button class="btn-sm btn-primary">+ Assign Bulk</button>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <div class="filter-chip active" onclick="filterTickets(this,'all')">All</div>
+            <div class="filter-chip" onclick="filterTickets(this,'open')">Unassigned</div>
+            <div class="filter-chip" onclick="filterTickets(this,'inprogress')">In Progress</div>
+            <div class="filter-chip" onclick="filterTickets(this,'resolved')">Pending Verify</div>
+          </div>
+          <div class="table-wrap">
+            <table class="ticket-table">
+              <thead><tr><th>ID</th><th>Issue</th><th>Category</th><th>Priority</th><th>Status</th><th>Assign To</th><th>Action</th></tr></thead>
+              <tbody id="admin-tickets"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="col-card" style="margin-bottom:1rem;">
+            <div class="section-title" style="margin-bottom:0.9rem;">Workers On Duty</div>
+            <div id="worker-list" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
+          </div>
+          <div class="col-card">
+            <div class="section-title" style="margin-bottom:0.9rem;">Live Activity</div>
+            <div class="activity-feed" id="admin-activity"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</main>
+</div><!-- end app -->
+
+<!-- ══ DETAIL PANEL ══ -->
+<div class="panel-overlay" id="overlay" onclick="closePanel()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="panel-topbar">
+    <div>
+      <div style="font-size:0.68rem;color:var(--tlo);margin-bottom:2px;" id="panel-ticket-id">#HC-2024-001</div>
+      <div class="panel-title" id="panel-title">Tap Issue Title</div>
+    </div>
+    <div class="close-btn" onclick="closePanel()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  </div>
+  <div class="panel-body">
+    <!-- Status -->
+    <div id="panel-status-row" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+
+    <!-- Info grid -->
+    <div class="info-row" id="panel-info"></div>
+
+    <!-- Timeline -->
+    <div>
+      <div class="section-title" style="margin-bottom:0.8rem;">Timeline</div>
+      <div class="timeline" id="panel-timeline"></div>
+    </div>
+
+    <!-- Photos -->
+    <div>
+      <div class="section-title" style="margin-bottom:0.8rem;">Photo Evidence</div>
+      <div class="photo-grid" id="panel-photos"></div>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <div class="section-title" style="margin-bottom:0.5rem;">Description</div>
+      <p style="font-size:0.8rem;color:var(--tmd);line-height:1.6;" id="panel-desc"></p>
+    </div>
+
+    <!-- Admin: assign worker -->
+    <div id="panel-assign-section" style="display:none;">
+      <div class="section-title" style="margin-bottom:0.6rem;">Assign Worker</div>
+      <select class="assign-select">
+        <option>Rajesh Kumar — Electrician</option>
+        <option>Suresh Mehta — Plumber</option>
+        <option>Amit Singh — General</option>
+        <option>Vijay Rao — Carpenter</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="panel-actions" id="panel-actions"></div>
+</div>
+
+<script>
+// ═══════════════════════════════
+// DATA
+// ═══════════════════════════════
+const tickets = [
+  {id:'HC-001',title:'Fan not working',loc:'Room 204, Floor 2',cat:'electrical',priority:'high',status:'inprogress',filed:'2 days ago',worker:'Rajesh Kumar',desc:'The ceiling fan in room 204 has stopped working completely. Tried the switch and checked the regulator — no response. Needs immediate check as weather is hot.'},
+  {id:'HC-002',title:'Leaking tap in bathroom',loc:'Bathroom Block B',cat:'plumbing',priority:'critical',status:'open',filed:'5 hrs ago',worker:null,desc:'The tap in bathroom B is leaking continuously causing water wastage. The floor is always wet making it a slip hazard for students.'},
+  {id:'HC-003',title:'Broken study chair',loc:'Room 118',cat:'furniture',priority:'medium',status:'resolved',filed:'1 week ago',worker:'Vijay Rao',desc:'The study chair leg is broken. It wobbles dangerously while sitting. One of the screws has fallen out completely.'},
+  {id:'HC-004',title:'Ceiling crack visible',loc:'Room 312, Floor 3',cat:'civil',priority:'high',status:'assigned',filed:'3 days ago',worker:'Amit Singh',desc:'A visible crack has appeared on the ceiling near the window. It has been growing over the past week. Concerned about structural integrity.'},
+  {id:'HC-005',title:'Corridor lights not working',loc:'Floor 1 Corridor',cat:'electrical',priority:'medium',status:'inprogress',filed:'1 day ago',worker:'Rajesh Kumar',desc:'All corridor lights on Floor 1 are not working after 9 PM. Makes navigation very unsafe at night especially near the staircase.'},
+  {id:'HC-006',title:'Drain clogged in bathroom',loc:'Bathroom Block A',cat:'plumbing',priority:'high',status:'open',filed:'4 hrs ago',worker:null,desc:'Bathroom A drain is completely blocked. Water is not draining at all. Overflow is occurring. Immediate attention required.'},
+  {id:'HC-007',title:'Room door lock broken',loc:'Room 207',cat:'furniture',priority:'critical',status:'assigned',filed:'6 hrs ago',worker:'Vijay Rao',desc:'The room door lock is broken and the door cannot be properly secured. Security concern as the room cannot be locked properly.'},
+];
+
+const workers = [
+  {name:'Rajesh Kumar',role:'Electrician',tasks:3,status:'busy',color:'#f59e0b'},
+  {name:'Suresh Mehta',role:'Plumber',tasks:2,status:'busy',color:'#60a5fa'},
+  {name:'Vijay Rao',role:'Carpenter',tasks:2,status:'busy',color:'#a78bfa'},
+  {name:'Amit Singh',role:'General',tasks:1,status:'available',color:'#22d37a'},
+];
+
+const activities = [
+  {user:'Rajesh K.',msg:'Marked <strong>#HC-005</strong> as In Progress',time:'10 mins ago',color:'#f59e0b'},
+  {user:'Admin',msg:'Assigned <strong>#HC-007</strong> to Vijay Rao',time:'25 mins ago',color:'#5b8ff9'},
+  {user:'Suresh M.',msg:'Uploaded clearance photo for <strong>#HC-003</strong>',time:'1 hr ago',color:'#60a5fa'},
+  {user:'Student',msg:'Filed new complaint <strong>#HC-006</strong>',time:'4 hrs ago',color:'#ec4899'},
+  {user:'Admin',msg:'Closed ticket <strong>#HC-003</strong> after verification',time:'2 hrs ago',color:'#22d37a'},
+];
+
+// ═══════════════════════════════
+// NAV CONFIG
+// ═══════════════════════════════
+const navConfig = {
+  student:[
+    {label:'Overview', icon:'home', active:true},
+    {label:'My Tickets', icon:'list', active:false, dot:true},
+    {label:'File Complaint', icon:'plus', active:false},
+    {label:'Notifications', icon:'bell', active:false, badge:2},
+  ],
+  worker:[
+    {label:'Overview', icon:'home', active:true},
+    {label:'My Tasks', icon:'tool', active:false, dot:true},
+    {label:'Completed', icon:'check', active:false},
+    {label:'Notifications', icon:'bell', active:false, badge:3},
+  ],
+  admin:[
+    {label:'Overview', icon:'home', active:true},
+    {label:'All Tickets', icon:'list', active:false, dot:true},
+    {label:'Assign Workers', icon:'users', active:false},
+    {label:'Verify Resolved', icon:'check', active:false, badge:5},
+    {label:'Reports', icon:'bar-chart', active:false},
+    {label:'Notifications', icon:'bell', active:false, badge:4},
+  ],
+};
+
+const navIcons = {
+  home:`<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+  list:`<svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
+  plus:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+  bell:`<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>`,
+  tool:`<svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>`,
+  check:`<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`,
+  users:`<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
+  'bar-chart':`<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+};
+
+// ═══════════════════════════════
+// RENDER HELPERS
+// ═══════════════════════════════
+function catBadge(c){const m={electrical:'⚡ Electrical',plumbing:'🪠 Plumbing',furniture:'🪑 Furniture',civil:'🏗 Civil',cleaning:'🧹 Cleaning'};return`<span class="cat-badge cat-${c}">${m[c]||c}</span>`;}
+function statusBadge(s){const m={open:'Open',assigned:'Assigned',inprogress:'In Progress',resolved:'Resolved',closed:'Closed'};return`<span class="status-badge status-${s}">${m[s]||s}</span>`;}
+function priorityBadge(p){const m={critical:'🔴 Critical',high:'🟠 High',medium:'🔵 Medium',low:'⚪ Low'};const cls={critical:'pri-critical',high:'pri-high',medium:'pri-medium',low:'pri-low'};return`<span class="priority-badge ${cls[p]}"><span class="pri-dot"></span>${m[p]||p}</span>`;}
+
+function renderStudentTickets(){
+  const tbody=document.getElementById('student-tickets');
+  tbody.innerHTML=tickets.map(t=>`
+    <tr onclick="openPanel('${t.id}','student')">
+      <td><span class="tid">#${t.id}</span></td>
+      <td><div class="issue-cell"><div class="issue-title">${t.title}</div><div class="issue-loc">📍 ${t.loc}</div></div></td>
+      <td>${catBadge(t.cat)}</td>
+      <td>${priorityBadge(t.priority)}</td>
+      <td>${statusBadge(t.status)}</td>
+      <td style="color:var(--tlo);font-size:0.75rem">${t.filed}</td>
+      <td><div class="action-btns">
+        <div class="action-btn" title="View"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      </div></td>
+    </tr>`).join('');
+}
+
+function renderAdminTickets(){
+  const tbody=document.getElementById('admin-tickets');
+  const workers=['Rajesh K.','Suresh M.','Vijay R.','Amit S.'];
+  tbody.innerHTML=tickets.map(t=>`
+    <tr onclick="openPanel('${t.id}','admin')">
+      <td><span class="tid">#${t.id}</span></td>
+      <td><div class="issue-cell"><div class="issue-title">${t.title}</div><div class="issue-loc">📍 ${t.loc}</div></div></td>
+      <td>${catBadge(t.cat)}</td>
+      <td>${priorityBadge(t.priority)}</td>
+      <td>${statusBadge(t.status)}</td>
+      <td>
+        <select class="assign-select" style="width:120px;font-size:0.72rem;padding:4px 6px;" onclick="event.stopPropagation()">
+          <option value="">${t.worker||'— Assign —'}</option>
+          ${workers.map(w=>`<option>${w}</option>`).join('')}
+        </select>
+      </td>
+      <td><div class="action-btns">
+        <div class="action-btn" title="View"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="action-btn" title="Verify" style="color:var(--green)" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      </div></td>
+    </tr>`).join('');
+}
+
+function renderWorkerTasks(){
+  const container=document.getElementById('worker-tasks');
+  const myTasks=tickets.filter(t=>t.status==='inprogress'||t.status==='assigned');
+  container.innerHTML=myTasks.map(t=>`
+    <div class="task-card" onclick="openPanel('${t.id}','worker')">
+      <div class="task-header">
+        <div><div class="task-id">#${t.id}</div><div class="task-title">${t.title}</div><div class="task-loc"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${t.loc}</div></div>
+        ${statusBadge(t.status)}
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">${catBadge(t.cat)} ${priorityBadge(t.priority)}</div>
+      <div class="task-meta">
+        <span class="task-deadline"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Due in 2h</span>
+      </div>
+      <div class="task-progress">
+        <div class="prog-label"><span>Progress</span><span>${t.status==='inprogress'?'60%':'10%'}</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:${t.status==='inprogress'?60:10}%"></div></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderWorkerActivity(){
+  const el=document.getElementById('worker-activity');
+  el.innerHTML=activities.slice(0,3).map(a=>`
+    <div class="act-item">
+      <div class="act-avatar" style="background:${a.color}">${a.user[0]}</div>
+      <div class="act-body"><div class="act-msg">${a.msg}</div><div class="act-time">${a.time}</div></div>
+    </div>`).join('');
+}
+
+function renderAdminActivity(){
+  const el=document.getElementById('admin-activity');
+  el.innerHTML=activities.map(a=>`
+    <div class="act-item">
+      <div class="act-avatar" style="background:${a.color}">${a.user[0]}</div>
+      <div class="act-body"><div class="act-msg">${a.msg}</div><div class="act-time">${a.time}</div></div>
+    </div>`).join('');
+}
+
+function renderWorkerList(){
+  const el=document.getElementById('worker-list');
+  el.innerHTML=workers.map(w=>`
+    <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;">
+      <div style="width:28px;height:28px;border-radius:7px;background:${w.color}22;border:1px solid ${w.color}44;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:${w.color};">${w.name[0]}</div>
+      <div style="flex:1;min-width:0;"><div style="font-size:0.78rem;font-weight:600;color:var(--thi)">${w.name}</div><div style="font-size:0.65rem;color:var(--tlo)">${w.role}</div></div>
+      <div style="text-align:right"><div style="font-size:0.68rem;font-weight:700;color:${w.status==='available'?'var(--green)':'#f59e0b'}">${w.status==='available'?'Free':'Busy'}</div><div style="font-size:0.62rem;color:var(--tlo)">${w.tasks} tasks</div></div>
+    </div>`).join('');
+}
+
+function renderNav(role){
+  const nav=document.getElementById('sidebar-nav');
+  const items=navConfig[role]||[];
+  nav.innerHTML=`<div class="nav-section-title">Navigation</div>`+items.map(item=>`
+    <div class="nav-item${item.active?' active':''}">
+      ${navIcons[item.icon]||''}
+      ${item.label}
+      ${item.dot?`<span class="nav-dot"></span>`:''}
+      ${item.badge?`<span class="notif-badge">${item.badge}</span>`:''}
+    </div>`).join('');
+}
+
+// ═══════════════════════════════
+// ROLE SWITCHER
+// ═══════════════════════════════
+let currentRole='student';
+const roleConfig={
+  student:{name:'Rahul Arora',initials:'RA',label:'Student · BH-1',title:'My Tickets',sub:'Tracking your complaints'},
+  worker:{name:'Rajesh Kumar',initials:'RK',label:'Worker · Electrician',title:'My Tasks',sub:'Assigned maintenance jobs'},
+  admin:{name:'Dr. S. Sharma',initials:'SS',label:'Admin · BH-1',title:'All Tickets',sub:'Managing hostel BH-1'},
+};
+
+function switchRole(role){
+  currentRole=role;
+  document.querySelectorAll('.role-pill').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.role-pill').forEach(p=>{if(p.textContent.toLowerCase().includes(role))p.classList.add('active');});
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+role).classList.add('active');
+  const cfg=roleConfig[role];
+  document.getElementById('user-avatar').textContent=cfg.initials;
+  document.getElementById('user-name').textContent=cfg.name;
+  document.getElementById('user-role-label').textContent=cfg.label;
+  document.getElementById('topbar-title').innerHTML=`${cfg.title} <span id="topbar-sub">${cfg.sub}</span>`;
+  renderNav(role);
+}
+
+// ═══════════════════════════════
+// DETAIL PANEL
+// ═══════════════════════════════
+function openPanel(id,role){
+  const t=tickets.find(x=>x.id===id);
+  if(!t)return;
+  document.getElementById('panel-ticket-id').textContent='#'+t.id;
+  document.getElementById('panel-title').textContent=t.title;
+  document.getElementById('panel-desc').textContent=t.desc;
+
+  document.getElementById('panel-status-row').innerHTML=statusBadge(t.status)+' '+priorityBadge(t.priority)+' '+catBadge(t.cat);
+
+  document.getElementById('panel-info').innerHTML=`
+    <div class="info-block"><div class="info-block-label">Location</div><div class="info-block-val">📍 ${t.loc}</div></div>
+    <div class="info-block"><div class="info-block-label">Filed</div><div class="info-block-val">🕒 ${t.filed}</div></div>
+    <div class="info-block"><div class="info-block-label">Assigned To</div><div class="info-block-val">${t.worker?`🔧 ${t.worker}`:'— Not assigned'}</div></div>
+    <div class="info-block"><div class="info-block-label">Hostel</div><div class="info-block-val">🏢 BH-1</div></div>`;
+
+  const tlSteps=[
+    {label:'Complaint Filed',time:t.filed,state:'done'},
+    {label:'Reviewed by Admin',time:t.status!=='open'?'Reviewed':'Pending',state:t.status!=='open'?'done':'active'},
+    {label:'Worker Assigned',time:t.worker?'Assigned':'Pending',state:t.worker?'done':t.status==='open'?'':'active'},
+    {label:'Work In Progress',time:t.status==='inprogress'||t.status==='resolved'?'Started':'Pending',state:t.status==='inprogress'||t.status==='resolved'?'done':t.status==='assigned'?'active':''},
+    {label:'Resolved & Verified',time:t.status==='resolved'?'Done':'Pending',state:t.status==='resolved'?'done':''},
+  ];
+  document.getElementById('panel-timeline').innerHTML=tlSteps.map(s=>`
+    <div class="tl-item">
+      <div class="tl-dot ${s.state}">${s.state==='done'?'✓':s.state==='active'?'●':''}</div>
+      <div class="tl-text"><div class="tl-label" style="color:${s.state?'var(--thi)':'var(--tlo)'}">${s.label}</div><div class="tl-time">${s.time}</div></div>
+    </div>`).join('');
+
+  const beforeOk=t.status!=='open';
+  const afterOk=t.status==='resolved';
+  document.getElementById('panel-photos').innerHTML=`
+    <div class="photo-slot${beforeOk?' has-photo':''}">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p>${beforeOk?'✓ Before Photo':'Before Photo'}</p>
+    </div>
+    <div class="photo-slot${afterOk?' has-photo':''}">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <p>${afterOk?'✓ After Photo':'After Photo'}</p>
+    </div>`;
+
+  const assignSec=document.getElementById('panel-assign-section');
+  const actions=document.getElementById('panel-actions');
+  if(role==='admin'){
+    assignSec.style.display='block';
+    actions.innerHTML=`
+      <button class="btn-full btn-primary" style="background:linear-gradient(135deg,var(--accent),var(--accent2))">Assign & Notify Worker</button>
+      ${t.status==='resolved'?`<button class="btn-full btn-success" onclick="alert('Ticket Closed!')">✓ Verify & Close Ticket</button>`:''}
+      <button class="btn-full btn-danger">Escalate to Authority</button>`;
+  } else if(role==='worker'){
+    assignSec.style.display='none';
+    actions.innerHTML=`
+      <button class="btn-full btn-success">Upload After Photo & Mark Resolved</button>
+      <button class="btn-full btn-ghost btn-sm" style="width:100%;padding:9px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--tmd);cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;font-weight:600;font-size:0.83rem;">Request More Time</button>`;
+  } else {
+    assignSec.style.display='none';
+    actions.innerHTML=`<button class="btn-full" style="background:var(--surface2);border:1px solid var(--border);color:var(--tmd);cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;font-weight:600;font-size:0.83rem;border-radius:9px;padding:10px;">📋 Download PDF Report</button>`;
+  }
+
+  document.getElementById('detailPanel').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closePanel(){
+  document.getElementById('detailPanel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ═══════════════════════════════
+// FILTERS
+// ═══════════════════════════════
+function filterTickets(el,status){
+  el.closest('.filter-bar').querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════
+// THEME
+// ═══════════════════════════════
+let isDark=true;
+function toggleTheme(){
+  isDark=!isDark;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.getElementById('moonOpt').classList.toggle('active',isDark);
+  document.getElementById('sunOpt').classList.toggle('active',!isDark);
+}
+
+// ═══════════════════════════════
+// SOS
+// ═══════════════════════════════
+function triggerSOS(){
+  const card=document.querySelector('.sos-card');
+  card.style.background='rgba(240,82,82,0.2)';
+  card.querySelector('strong').textContent='🚨 SOS Sent! Security Alerted!';
+  setTimeout(()=>{card.style.background='';card.querySelector('strong').textContent='Emergency SOS';},3000);
+}
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+function init(){
+  renderStudentTickets();
+  renderAdminTickets();
+  renderWorkerTasks();
+  renderWorkerActivity();
+  renderAdminActivity();
+  renderWorkerList();
+  renderNav('student');
+  // Set first role pill active
+  document.querySelector('.role-pill').classList.add('active');
+}
+init();
+</script>
+</body>
+</html>

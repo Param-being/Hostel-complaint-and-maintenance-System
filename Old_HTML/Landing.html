@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HostelCare — Login</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700,800&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --tr: 0.4s cubic-bezier(0.4,0,0.2,1); }
+
+[data-theme="dark"] {
+  --bg-l: #07090f; --bg-r: #0c0f18;
+  --accent: #5b8ff9; --accent2: #a78bfa;
+  --aglow: rgba(91,143,249,0.2); --a2glow: rgba(167,139,250,0.15);
+  --thi: #f0f4ff; --tmd: #7d8aaa; --tlo: #3a4260;
+  --ibg: rgba(255,255,255,0.04); --ibd: rgba(255,255,255,0.08);
+  --ifoc: rgba(91,143,249,0.55); --icol: #eef1f8;
+  --cbg: rgba(255,255,255,0.03); --cbd: rgba(255,255,255,0.07);
+  --div: rgba(255,255,255,0.06);
+  --pill-bg: rgba(91,143,249,0.13); --pill-col: #7fa8ff;
+  --wl: rgba(255,218,70,0.92); --wd: rgba(28,38,68,0.7);
+  --bld: #192038; --bld2: #111929; --roof: #0b1020;
+  --sky0: #04060e; --sky1: #0c1428;
+  --gnd: #090d1c; --path: #151d38; --tree: #0e3322;
+  --lt-hi: rgba(255,255,255,0.88);
+  --lt-md: rgba(255,255,255,0.36);
+  --lt-lo: rgba(255,255,255,0.14);
+  --sep: rgba(255,255,255,0.08);
+}
+[data-theme="light"] {
+  --bg-l: #0f1e4a; --bg-r: #f4f6fb;
+  --accent: #2d62f5; --accent2: #7c3aed;
+  --aglow: rgba(45,98,245,0.18); --a2glow: rgba(124,58,237,0.12);
+  --thi: #0d1a3a; --tmd: #4a5680; --tlo: #9aa4c0;
+  --ibg: #fff; --ibd: #dde2f0;
+  --ifoc: rgba(45,98,245,0.45); --icol: #0d1a3a;
+  --cbg: #fff; --cbd: #dde2f0;
+  --div: #c8d0e8;
+  --pill-bg: rgba(45,98,245,0.1); --pill-col: #2d62f5;
+  --wl: rgba(255,218,70,0.95); --wd: rgba(190,210,255,0.3);
+  --bld: #253c80; --bld2: #1c2d65; --roof: #131f4a;
+  --sky0: #162354; --sky1: #1e3278;
+  --gnd: #101c48; --path: #1a2858; --tree: #1a5c38;
+  --lt-hi: rgba(255,255,255,0.92);
+  --lt-md: rgba(255,255,255,0.48);
+  --lt-lo: rgba(255,255,255,0.22);
+  --sep: rgba(255,255,255,0.12);
+}
+
+html, body { height: 100%; overflow: hidden; font-family: 'Cabinet Grotesk', sans-serif; }
+.page { display: flex; height: 100vh; width: 100vw; }
+
+/* ══ LEFT ══ */
+.left {
+  flex: 0 0 50%;
+  background: var(--bg-l);
+  position: relative;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transition: background var(--tr);
+}
+.left::before {
+  content: ''; position: absolute; top: -100px; left: -80px;
+  width: 350px; height: 350px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(91,143,249,0.09) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.left::after {
+  content: ''; position: absolute; bottom: -80px; right: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(167,139,250,0.07) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+
+/* Brand */
+.left-brand {
+  position: relative; z-index: 3;
+  padding: 2rem 2.2rem 0;
+  display: flex; align-items: center; gap: 12px;
+}
+.logo-box {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 22px rgba(91,143,249,0.28);
+  position: relative; flex-shrink: 0;
+}
+.logo-box svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2.3; stroke-linecap: round; }
+.live-dot {
+  position: absolute; top: -3px; right: -3px;
+  width: 10px; height: 10px; background: #22d37a;
+  border-radius: 50%; border: 2px solid var(--bg-l);
+  animation: ldot 2.2s ease-in-out infinite; transition: border-color var(--tr);
+}
+.brand-text h1 {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.5rem; font-weight: 700; color: #fff;
+  letter-spacing: -0.5px; line-height: 1;
+}
+.brand-text h1 span {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.brand-text p { font-size: 0.6rem; color: rgba(255,255,255,0.28); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 2px; }
+
+/* Scene — fills space between brand and footer */
+.scene-wrap {
+  position: relative; z-index: 3;
+  flex: 1; min-height: 0;
+  display: flex; align-items: flex-end;
+  padding: 0 1.4rem;
+}
+.scene-svg { width: 100%; height: auto; display: block; }
+
+/* SVG Animations */
+.star { animation: twinkle var(--d,3s) ease-in-out infinite; animation-delay: var(--dly,0s); }
+@keyframes twinkle { 0%,100%{opacity:0.9} 50%{opacity:0.15} }
+.moon-g { animation: moonGlow 4s ease-in-out infinite; }
+@keyframes moonGlow { 0%,100%{filter:drop-shadow(0 0 5px rgba(200,215,255,0.5))} 50%{filter:drop-shadow(0 0 14px rgba(200,215,255,0.85))} }
+.win { animation: winFlick var(--d,7s) ease-in-out infinite; animation-delay: var(--dly,0s); }
+@keyframes winFlick { 0%,91%,95%,100%{opacity:1} 92%,94%{opacity:0.2} }
+.lamp-glow { animation: lampPulse 3s ease-in-out infinite; animation-delay: var(--dly,0s); }
+@keyframes lampPulse { 0%,100%{opacity:0.5} 50%{opacity:0.85} }
+.cloud { animation: cloudDrift var(--d,32s) linear infinite; animation-delay: var(--dly,0s); }
+@keyframes cloudDrift { from{transform:translateX(0)} to{transform:translateX(-420px)} }
+.flag { animation: flagWave 2.4s ease-in-out infinite; transform-origin: 190px 54px; }
+@keyframes flagWave { 0%,100%{transform:skewX(0deg) scaleY(1)} 35%{transform:skewX(-7deg) scaleY(0.95)} 70%{transform:skewX(5deg) scaleY(1.03)} }
+.bird { animation: birdFly 11s ease-in-out infinite; animation-delay: var(--dly,0s); }
+@keyframes birdFly { 0%,100%{transform:translate(0,0)} 50%{transform:translate(18px,-6px)} }
+.tree { animation: treeSway var(--d,4s) ease-in-out infinite; transform-origin: var(--ox,30px) 176px; animation-delay: var(--dly,0s); }
+@keyframes treeSway { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(var(--lean,1.5deg))} }
+.path-glow { animation: pathPulse 3s ease-in-out infinite; }
+@keyframes pathPulse { 0%,100%{opacity:0.15} 50%{opacity:0.4} }
+
+/* Footer — minimal, just 3 elements */
+.left-footer {
+  position: relative; z-index: 3;
+  padding: 1rem 2.2rem 1.8rem;
+  display: flex; flex-direction: column; gap: 0.85rem;
+}
+
+.left-tagline {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1rem; font-weight: 600;
+  color: var(--lt-hi); letter-spacing: -0.2px; line-height: 1.35;
+}
+.left-tagline span {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* Features — single line, pill-separator style */
+.feat-row { display: flex; align-items: center; }
+.feat-item {
+  display: flex; align-items: center; gap: 5px;
+}
+.feat-item + .feat-item { margin-left: 14px; padding-left: 14px; border-left: 1px solid var(--sep); }
+.feat-item svg { width: 12px; height: 12px; flex-shrink: 0; fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.75; }
+.feat-item span { font-size: 0.68rem; color: var(--lt-md); }
+
+/* Stats — compact, divider-separated */
+.stats-row {
+  display: flex; align-items: center;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--sep);
+}
+.stat { flex: 1; text-align: center; }
+.stat + .stat { border-left: 1px solid var(--sep); }
+.stat-n {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: #fff; line-height: 1; letter-spacing: -0.5px;
+}
+.stat-l { font-size: 0.58rem; color: var(--lt-lo); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+
+/* ══ DIVIDER ══ */
+.divider-line { flex: 0 0 1px; background: var(--div); transition: background var(--tr); }
+
+/* ══ RIGHT ══ */
+.right {
+  flex: 1; background: var(--bg-r);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem; position: relative; overflow: hidden;
+  transition: background var(--tr);
+}
+.right::before { content:''; position:absolute; top:-70px; right:-70px; width:240px; height:240px; border-radius:50%; background:var(--aglow); filter:blur(55px); pointer-events:none; }
+.right::after  { content:''; position:absolute; bottom:-50px; left:-40px; width:170px; height:170px; border-radius:50%; background:var(--a2glow); filter:blur(45px); pointer-events:none; }
+
+/* Theme toggle */
+.theme-toggle {
+  position: absolute; top: 1.4rem; right: 1.4rem;
+  display: flex; align-items: center;
+  background: var(--cbg); border: 1px solid var(--cbd);
+  border-radius: 100px; padding: 4px; cursor: pointer;
+  transition: border-color var(--tr); z-index: 10;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+.t-opt {
+  width: 30px; height: 30px; border-radius: 100px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+.t-opt svg { width: 14px; height: 14px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.25s; }
+.t-opt.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 2px 10px var(--aglow); }
+.t-opt.active svg { stroke: #fff; }
+.t-opt:not(.active) svg { stroke: var(--tlo); }
+
+/* Login card */
+.login-card { width: 100%; max-width: 390px; position: relative; z-index: 2; animation: fadeUp 0.7s 0.1s ease both; }
+.welcome-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--pill-bg); color: var(--pill-col);
+  font-size: 0.72rem; font-weight: 700; padding: 4px 12px; border-radius: 100px;
+  margin-bottom: 0.8rem; letter-spacing: 0.04em;
+}
+.pdot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; animation: pulse 2s infinite; }
+.login-title { font-family: 'Clash Display', sans-serif; font-size: 1.95rem; font-weight: 700; color: var(--thi); letter-spacing: -0.5px; line-height: 1.1; margin-bottom: 0.25rem; transition: color var(--tr); }
+.login-sub { font-size: 0.85rem; color: var(--tmd); margin-bottom: 1.5rem; }
+.role-tabs { display: flex; gap: 5px; background: var(--ibg); border: 1px solid var(--ibd); border-radius: 12px; padding: 4px; margin-bottom: 1.4rem; }
+.role-tab { flex: 1; padding: 0.48rem 0; border: none; border-radius: 8px; background: transparent; color: var(--tlo); font-family: 'Cabinet Grotesk', sans-serif; font-size: 0.79rem; font-weight: 700; cursor: pointer; transition: all 0.22s; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.role-tab.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; box-shadow: 0 4px 16px var(--aglow); }
+.role-tab:not(.active):hover { color: var(--tmd); background: var(--ibd); }
+.form-group { margin-bottom: 0.95rem; }
+label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--tmd); margin-bottom: 5px; letter-spacing: 0.05em; text-transform: uppercase; }
+.input-wrap { position: relative; }
+.iico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--tlo); pointer-events: none; display: flex; }
+.iico svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+input[type="email"], input[type="password"], input[type="text"] { width: 100%; height: 46px; background: var(--ibg); border: 1px solid var(--ibd); border-radius: 10px; padding: 0 14px 0 38px; font-family: 'Cabinet Grotesk', sans-serif; font-size: 0.88rem; color: var(--icol); outline: none; transition: all var(--tr); }
+input:focus { border-color: var(--ifoc); box-shadow: 0 0 0 3px var(--aglow); }
+input::placeholder { color: var(--tlo); }
+.ptog { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--tlo); cursor: pointer; display: flex; padding: 0; }
+.ptog svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.row-flex { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.3rem; }
+.rlab { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: var(--tmd); cursor: pointer; }
+.rlab input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; padding: 0; }
+.flink { font-size: 0.8rem; color: var(--accent); text-decoration: none; font-weight: 700; }
+.flink:hover { opacity: 0.7; }
+.btn-login { width: 100%; height: 48px; background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); color: #fff; border: none; border-radius: 11px; font-family: 'Clash Display', sans-serif; font-size: 1rem; font-weight: 600; letter-spacing: 0.03em; cursor: pointer; position: relative; overflow: hidden; transition: transform 0.15s, box-shadow 0.2s; box-shadow: 0 6px 24px var(--aglow); }
+.btn-login:hover { transform: translateY(-2px); box-shadow: 0 12px 32px var(--aglow); }
+.btn-login:active { transform: translateY(0); }
+.bshine { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.17) 50%, transparent 60%); transform: translateX(-100%); transition: transform 0.5s; }
+.btn-login:hover .bshine { transform: translateX(100%); }
+.sos-strip { margin-top: 1.1rem; display: flex; align-items: center; gap: 10px; background: rgba(220,38,38,0.07); border: 1px solid rgba(220,38,38,0.18); border-radius: 10px; padding: 10px 14px; cursor: pointer; transition: all 0.2s; }
+.sos-strip:hover { background: rgba(220,38,38,0.13); border-color: rgba(220,38,38,0.3); }
+.sos-icon { width: 28px; height: 28px; background: #dc2626; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; animation: sosGlow 1.8s ease-in-out infinite; }
+.sos-icon svg { width: 13px; height: 13px; fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; }
+.sos-text { flex: 1; }
+.sos-title { font-size: 0.78rem; font-weight: 700; color: #ef4444; display: block; }
+.sos-sub { font-size: 0.68rem; color: var(--tlo); }
+.sos-arr { color: #ef4444; font-size: 14px; opacity: 0.6; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@keyframes ldot { 0%,100%{box-shadow:0 0 0 0 rgba(34,211,122,0.5)} 60%{box-shadow:0 0 0 5px rgba(34,211,122,0)} }
+@keyframes sosGlow { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.5)} 50%{box-shadow:0 0 0 6px rgba(220,38,38,0)} }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ════ LEFT ════ -->
+<div class="left">
+
+  <div class="left-brand">
+    <div class="logo-box">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <div class="live-dot"></div>
+    </div>
+    <div class="brand-text">
+      <h1>Hostel<span>Care</span></h1>
+      <p>Smart Hostel Management</p>
+    </div>
+  </div>
+
+  <div class="scene-wrap">
+    <svg class="scene-svg" viewBox="0 0 390 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--sky0)"/>
+          <stop offset="100%" stop-color="var(--sky1)"/>
+        </linearGradient>
+        <radialGradient id="moonG" cx="38%" cy="35%" r="50%">
+          <stop offset="0%" stop-color="#e8eeff"/>
+          <stop offset="100%" stop-color="#b0c0f0"/>
+        </radialGradient>
+        <radialGradient id="lamp1" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffd966" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#ffd966" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="gf" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2.5"/>
+        </filter>
+        <clipPath id="sc"><rect width="390" height="240"/></clipPath>
+      </defs>
+      <g clip-path="url(#sc)">
+      <rect width="390" height="240" fill="url(#sky)"/>
+      <circle class="star" cx="22"  cy="18" r="1"   fill="rgba(255,255,255,0.9)" style="--d:2.8s;--dly:0s"/>
+      <circle class="star" cx="58"  cy="10" r="1.2" fill="rgba(255,255,255,0.8)" style="--d:3.6s;--dly:0.4s"/>
+      <circle class="star" cx="105" cy="24" r="0.9" fill="rgba(255,255,255,0.85)" style="--d:2.3s;--dly:1.1s"/>
+      <circle class="star" cx="148" cy="9"  r="1.1" fill="rgba(255,255,255,0.9)" style="--d:4s;--dly:0.7s"/>
+      <circle class="star" cx="200" cy="16" r="0.8" fill="rgba(255,255,255,0.75)" style="--d:3.1s;--dly:1.5s"/>
+      <circle class="star" cx="248" cy="7"  r="1.2" fill="rgba(255,255,255,0.85)" style="--d:2.5s;--dly:0.2s"/>
+      <circle class="star" cx="292" cy="20" r="1"   fill="rgba(255,255,255,0.9)" style="--d:3.8s;--dly:0.9s"/>
+      <circle class="star" cx="345" cy="12" r="0.9" fill="rgba(255,255,255,0.8)" style="--d:2.9s;--dly:1.8s"/>
+      <circle class="star" cx="372" cy="28" r="1.1" fill="rgba(255,255,255,0.85)" style="--d:3.3s;--dly:0.5s"/>
+      <circle class="star" cx="42"  cy="38" r="0.7" fill="rgba(255,255,255,0.7)" style="--d:4.2s;--dly:1.3s"/>
+      <circle class="star" cx="320" cy="40" r="0.8" fill="rgba(255,255,255,0.75)" style="--d:2.6s;--dly:0.8s"/>
+      <g class="moon-g">
+        <circle cx="348" cy="34" r="20" fill="url(#moonG)"/>
+        <circle cx="355" cy="27" r="16" fill="var(--sky0)" opacity="0.88"/>
+      </g>
+      <g class="cloud" style="--d:38s;--dly:0s">
+        <ellipse cx="75"  cy="60" rx="28" ry="9"  fill="rgba(255,255,255,0.05)"/>
+        <ellipse cx="90"  cy="55" rx="18" ry="7"  fill="rgba(255,255,255,0.04)"/>
+        <ellipse cx="60"  cy="58" rx="15" ry="5"  fill="rgba(255,255,255,0.035)"/>
+      </g>
+      <g class="cloud" style="--d:50s;--dly:-20s;transform:translateX(-180px)">
+        <ellipse cx="320" cy="44" rx="24" ry="8"  fill="rgba(255,255,255,0.04)"/>
+        <ellipse cx="336" cy="39" rx="16" ry="6"  fill="rgba(255,255,255,0.032)"/>
+      </g>
+      <g class="bird" style="--dly:0s"><path d="M145 52 q3-3.5 6 0" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="1.3" stroke-linecap="round"/></g>
+      <g class="bird" style="--dly:0.4s"><path d="M155 48 q3-3 6 0" fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="1.1" stroke-linecap="round"/></g>
+      <g class="bird" style="--dly:0.8s"><path d="M167 51 q3-3 6 0" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1" stroke-linecap="round"/></g>
+      <!-- Ground -->
+      <rect x="0" y="206" width="390" height="34" fill="var(--gnd)"/>
+      <line x1="0" y1="206" x2="390" y2="206" stroke="rgba(91,143,249,0.15)" stroke-width="0.8"/>
+      <ellipse cx="195" cy="209" rx="55" ry="8" fill="var(--path)" opacity="0.9"/>
+      <ellipse class="path-glow" cx="195" cy="209" rx="36" ry="4" fill="rgba(91,143,249,0.5)"/>
+      <!-- Trees -->
+      <g class="tree" style="--d:4.4s;--dly:0s;--lean:1.8deg;--ox:30px">
+        <rect x="27" y="176" width="5" height="31" fill="#4a3520"/>
+        <ellipse cx="29" cy="170" rx="15" ry="19" fill="var(--tree)"/>
+        <ellipse cx="29" cy="163" rx="10" ry="12" fill="rgba(15,70,35,0.65)"/>
+      </g>
+      <g class="tree" style="--d:3.7s;--dly:0.7s;--lean:-1.5deg;--ox:48px">
+        <rect x="45" y="184" width="4" height="23" fill="#4a3520"/>
+        <ellipse cx="47" cy="178" rx="11" ry="14" fill="var(--tree)"/>
+      </g>
+      <g class="tree" style="--d:4.1s;--dly:0.3s;--lean:1.6deg;--ox:340px">
+        <rect x="337" y="178" width="5" height="29" fill="#4a3520"/>
+        <ellipse cx="339" cy="172" rx="14" ry="18" fill="var(--tree)"/>
+        <ellipse cx="339" cy="166" rx="9" ry="11" fill="rgba(15,70,35,0.6)"/>
+      </g>
+      <g class="tree" style="--d:4.6s;--dly:1s;--lean:-1.7deg;--ox:356px">
+        <rect x="353" y="186" width="4" height="21" fill="#4a3520"/>
+        <ellipse cx="355" cy="180" rx="10" ry="13" fill="var(--tree)"/>
+      </g>
+      <!-- Side buildings -->
+      <rect x="58" y="158" width="52" height="49" fill="var(--bld2)" rx="2"/>
+      <polygon points="54,162 84,136 114,162" fill="var(--roof)"/>
+      <line x1="54" y1="162" x2="114" y2="162" stroke="rgba(91,143,249,0.2)" stroke-width="0.8"/>
+      <rect class="win" x="66" y="167" width="11" height="10" rx="1.5" fill="var(--wl)" style="--d:8.5s;--dly:1.4s"/>
+      <rect x="80" y="167" width="11" height="10" rx="1.5" fill="var(--wd)"/>
+      <rect class="win" x="94" y="167" width="11" height="10" rx="1.5" fill="var(--wl)" style="--d:6.8s;--dly:2.8s"/>
+      <rect class="win" x="66" y="182" width="11" height="10" rx="1.5" fill="var(--wl)" style="--d:10s;--dly:0.6s"/>
+      <rect x="80" y="182" width="11" height="10" rx="1.5" fill="var(--wd)"/>
+      <rect class="win" x="94" y="182" width="11" height="10" rx="1.5" fill="var(--wl)" style="--d:7.8s;--dly:3.5s"/>
+      <rect x="280" y="160" width="52" height="47" fill="var(--bld2)" rx="2"/>
+      <polygon points="276,164 306,138 336,164" fill="var(--roof)"/>
+      <line x1="276" y1="164" x2="336" y2="164" stroke="rgba(91,143,249,0.2)" stroke-width="0.8"/>
+      <rect x="288" y="169" width="11" height="10" rx="1.5" fill="var(--wd)"/>
+      <rect class="win" x="302" y="169" width="11" height="10" rx="1.5" fill="var(--wl)" style="--d:9.2s;--dly:0.2s"/>
+      <rect class="win" x="316" y="169" width="11" height="10" rx="1.5" fill="var(--wl)" style="--d:7s;--dly:2.2s"/>
+      <rect class="win" x="288" y="184" width="11" height="10" rx="1.5" fill="var(--wl)" style="--d:11s;--dly:1s"/>
+      <rect x="302" y="184" width="11" height="10" rx="1.5" fill="var(--wd)"/>
+      <rect class="win" x="316" y="184" width="11" height="10" rx="1.5" fill="var(--wl)" style="--d:8.3s;--dly:3.9s"/>
+      <!-- Main building shadow -->
+      <ellipse cx="195" cy="208" rx="85" ry="7" fill="rgba(0,0,0,0.4)"/>
+      <!-- Main building -->
+      <rect x="113" y="114" width="164" height="93" fill="var(--bld)" rx="2"/>
+      <line x1="113" y1="144" x2="277" y2="144" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+      <line x1="113" y1="174" x2="277" y2="174" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+      <rect x="113" y="114" width="164" height="11" fill="var(--bld2)" rx="2"/>
+      <polygon points="108,118 195,80 282,118" fill="var(--roof)"/>
+      <line x1="108" y1="118" x2="282" y2="118" stroke="rgba(91,143,249,0.35)" stroke-width="1.2"/>
+      <line x1="130" y1="118" x2="195" y2="82" stroke="rgba(91,143,249,0.18)" stroke-width="0.8"/>
+      <line x1="195" y1="82" x2="260" y2="118" stroke="rgba(91,143,249,0.18)" stroke-width="0.8"/>
+      <line x1="195" y1="80" x2="195" y2="62" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
+      <rect class="flag" x="196" y="62" width="20" height="12" rx="1.5" fill="var(--accent)"/>
+      <rect x="150" y="120" width="90" height="11" rx="2" fill="rgba(91,143,249,0.12)" stroke="rgba(91,143,249,0.22)" stroke-width="0.5"/>
+      <text x="195" y="128" text-anchor="middle" fill="rgba(150,190,255,0.75)" font-size="5.5" font-family="sans-serif" font-weight="600" letter-spacing="1.2">HOSTELCARE BLOCK A</text>
+      <!-- Windows -->
+      <rect class="win" x="125" y="126" width="18" height="14" rx="2" fill="var(--wl)" style="--d:7s;--dly:0.5s"/>
+      <rect class="win" x="149" y="126" width="18" height="14" rx="2" fill="var(--wl)" style="--d:9s;--dly:1.3s"/>
+      <rect             x="173" y="126" width="18" height="14" rx="2" fill="var(--wd)"/>
+      <rect class="win" x="199" y="126" width="18" height="14" rx="2" fill="var(--wl)" style="--d:6.5s;--dly:2.1s"/>
+      <rect class="win" x="223" y="126" width="18" height="14" rx="2" fill="var(--wl)" style="--d:8.2s;--dly:0.8s"/>
+      <rect             x="247" y="126" width="18" height="14" rx="2" fill="var(--wd)"/>
+      <rect             x="125" y="148" width="18" height="14" rx="2" fill="var(--wd)"/>
+      <rect class="win" x="149" y="148" width="18" height="14" rx="2" fill="var(--wl)" style="--d:11s;--dly:3s"/>
+      <rect class="win" x="173" y="148" width="18" height="14" rx="2" fill="var(--wl)" style="--d:7.5s;--dly:1.8s"/>
+      <rect             x="199" y="148" width="18" height="14" rx="2" fill="var(--wd)"/>
+      <rect class="win" x="223" y="148" width="18" height="14" rx="2" fill="var(--wl)" style="--d:9.5s;--dly:0.3s"/>
+      <rect class="win" x="247" y="148" width="18" height="14" rx="2" fill="var(--wl)" style="--d:6s;--dly:2.6s"/>
+      <rect class="win" x="125" y="177" width="18" height="14" rx="2" fill="var(--wl)" style="--d:8.5s;--dly:1s"/>
+      <rect             x="149" y="177" width="18" height="14" rx="2" fill="var(--wd)"/>
+      <rect class="win" x="223" y="177" width="18" height="14" rx="2" fill="var(--wl)" style="--d:10s;--dly:1.6s"/>
+      <rect             x="247" y="177" width="18" height="14" rx="2" fill="var(--wd)"/>
+      <!-- Door -->
+      <rect x="177" y="174" width="36" height="33" rx="2" fill="#070a14"/>
+      <rect x="179" y="176" width="32" height="29" rx="1.5" fill="#0a0e1e"/>
+      <path d="M179 189 Q195 175 211 189" fill="rgba(91,143,249,0.12)" stroke="rgba(91,143,249,0.38)" stroke-width="0.9"/>
+      <circle cx="207" cy="193" r="2" fill="rgba(255,200,80,0.8)"/>
+      <rect x="172" y="206" width="46" height="4" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+      <!-- Lamp posts -->
+      <line x1="84" y1="206" x2="84" y2="168" stroke="#252e50" stroke-width="2.5"/>
+      <line x1="84" y1="168" x2="97" y2="168" stroke="#252e50" stroke-width="2"/>
+      <circle cx="97" cy="167" r="5" fill="#ffd966"/>
+      <circle cx="97" cy="167" r="16" fill="url(#lamp1)" class="lamp-glow" style="--dly:0s"/>
+      <circle cx="97" cy="167" r="9" fill="#ffd966" opacity="0.2" filter="url(#gf)"/>
+      <line x1="306" y1="206" x2="306" y2="168" stroke="#252e50" stroke-width="2.5"/>
+      <line x1="306" y1="168" x2="293" y2="168" stroke="#252e50" stroke-width="2"/>
+      <circle cx="293" cy="167" r="5" fill="#ffd966"/>
+      <circle cx="293" cy="167" r="16" fill="url(#lamp1)" class="lamp-glow" style="--dly:0.9s"/>
+      <circle cx="293" cy="167" r="9" fill="#ffd966" opacity="0.2" filter="url(#gf)"/>
+      <!-- Fence -->
+      <g opacity="0.5">
+        <line x1="62" y1="206" x2="62" y2="216" stroke="rgba(150,170,220,0.3)" stroke-width="1"/>
+        <line x1="72" y1="206" x2="72" y2="216" stroke="rgba(150,170,220,0.3)" stroke-width="1"/>
+        <line x1="82" y1="206" x2="82" y2="216" stroke="rgba(150,170,220,0.3)" stroke-width="1"/>
+        <line x1="62" y1="206" x2="82" y2="206" stroke="rgba(150,170,220,0.3)" stroke-width="1"/>
+        <line x1="310" y1="206" x2="310" y2="216" stroke="rgba(150,170,220,0.3)" stroke-width="1"/>
+        <line x1="320" y1="206" x2="320" y2="216" stroke="rgba(150,170,220,0.3)" stroke-width="1"/>
+        <line x1="330" y1="206" x2="330" y2="216" stroke="rgba(150,170,220,0.3)" stroke-width="1"/>
+        <line x1="310" y1="206" x2="330" y2="206" stroke="rgba(150,170,220,0.3)" stroke-width="1"/>
+      </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Footer -->
+  <div class="left-footer">
+    <div class="left-tagline">
+      Hostel maintenance,<br><span>digitized & accountable.</span>
+    </div>
+
+    <div class="feat-row">
+      <div class="feat-item">
+        <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        <span>Maintenance</span>
+      </div>
+      <div class="feat-item">
+        <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Photo Proof</span>
+      </div>
+      <div class="feat-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span>Role Access</span>
+      </div>
+      <div class="feat-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>SOS Alert</span>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n">98%</div><div class="stat-l">Resolved</div></div>
+      <div class="stat"><div class="stat-n">&lt;2h</div><div class="stat-l">Response</div></div>
+      <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">Uptime</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DIVIDER -->
+<div class="divider-line"></div>
+
+<!-- ════ RIGHT ════ -->
+<div class="right">
+
+  <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+    <div class="t-opt active" id="moonOpt">
+      <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </div>
+    <div class="t-opt" id="sunOpt">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </div>
+  </div>
+
+  <div class="login-card">
+    <div class="welcome-pill"><span class="pdot"></span> Secure Portal</div>
+    <h2 class="login-title">Welcome back</h2>
+    <p class="login-sub">Sign in to your HostelCare account</p>
+
+    <div class="role-tabs">
+      <button class="role-tab active" onclick="setRole(this,'student')">🎓 Student</button>
+      <button class="role-tab" onclick="setRole(this,'worker')">🔧 Worker</button>
+      <button class="role-tab" onclick="setRole(this,'admin')">🛡 Admin</button>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email / ID</label>
+      <div class="input-wrap">
+        <span class="iico"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+        <input type="email" id="email" placeholder="you@hostel.edu" autocomplete="email"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="input-wrap">
+        <span class="iico"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+        <input type="password" id="password" placeholder="Enter your password"/>
+        <button class="ptog" onclick="togglePass()" type="button">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="row-flex">
+      <label class="rlab"><input type="checkbox"/> Remember me</label>
+      <a href="#" class="flink">Forgot password?</a>
+    </div>
+
+    <button class="btn-login" onclick="handleLogin()">
+      <span class="bshine"></span>Sign In
+    </button>
+
+    <div class="sos-strip" onclick="triggerSOS()">
+      <div class="sos-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="sos-text">
+        <span class="sos-title">Emergency SOS</span>
+        <span class="sos-sub">Bypass queue · Alert security & admins instantly</span>
+      </div>
+      <span class="sos-arr">→</span>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+const html = document.documentElement;
+let isDark = true;
+function toggleTheme() {
+  isDark = !isDark;
+  html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('moonOpt').classList.toggle('active', isDark);
+  document.getElementById('sunOpt').classList.toggle('active', !isDark);
+}
+function setRole(el, role) {
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const ph = { student:'you@hostel.edu', worker:'worker@hostel.edu', admin:'admin@hostelcare.in' };
+  document.getElementById('email').placeholder = ph[role];
+}
+let pv = false;
+function togglePass() {
+  pv = !pv;
+  document.getElementById('password').type = pv ? 'text' : 'password';
+}
+function handleLogin() {
+  const btn = document.querySelector('.btn-login');
+  btn.innerHTML = '<span class="bshine"></span>Signing in…';
+  btn.style.opacity = '0.8';
+  setTimeout(() => { btn.innerHTML = '<span class="bshine"></span>Sign In'; btn.style.opacity = '1'; }, 1600);
+}
+function triggerSOS() {
+  const sos = document.querySelector('.sos-strip');
+  sos.style.background = 'rgba(220,38,38,0.2)';
+  sos.querySelector('.sos-title').textContent = 'SOS Sent! Help is on the way…';
+  setTimeout(() => { sos.style.background = ''; sos.querySelector('.sos-title').textContent = 'Emergency SOS'; }, 2800);
+}
+</script>
+</body>
+</html>

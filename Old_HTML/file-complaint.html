@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HostelCare — File a Complaint</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@300,400,500,700,800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--tr:0.35s cubic-bezier(0.4,0,0.2,1);}
+
+[data-theme="dark"]{
+  --bg:#07090f; --surface:#0d1020; --surface2:#111528;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+  --accent:#5b8ff9; --accent2:#a78bfa; --green:#22d37a; --red:#f05252; --amber:#f59e0b;
+  --aglow:rgba(91,143,249,0.18); --gglow:rgba(34,211,122,0.15); --rglow:rgba(240,82,82,0.15);
+  --thi:#eef1fc; --tmd:#7d8aaa; --tlo:#3a4260;
+  --sidebar:#080b16; --topbar:#0a0d1a;
+  --card:#0f1322; --card2:#131728;
+  --sbw:220px;
+  --input-bg:rgba(255,255,255,0.04); --input-bd:rgba(255,255,255,0.08);
+  --input-focus:rgba(91,143,249,0.5);
+}
+[data-theme="light"]{
+  --bg:#f0f2f9; --surface:#ffffff; --surface2:#f7f8fc;
+  --border:rgba(0,0,0,0.07); --border2:rgba(0,0,0,0.13);
+  --accent:#2d62f5; --accent2:#7c3aed; --green:#16a34a; --red:#dc2626; --amber:#d97706;
+  --aglow:rgba(45,98,245,0.14); --gglow:rgba(22,163,74,0.14); --rglow:rgba(220,38,38,0.14);
+  --thi:#0d1530; --tmd:#4a5578; --tlo:#9aa3c0;
+  --sidebar:#ffffff; --topbar:#ffffff;
+  --card:#ffffff; --card2:#f7f8fc;
+  --sbw:220px;
+  --input-bg:#ffffff; --input-bd:#dde2f0;
+  --input-focus:rgba(45,98,245,0.4);
+}
+
+html,body{height:100%;font-family:'Cabinet Grotesk',sans-serif;background:var(--bg);color:var(--thi);transition:background var(--tr),color var(--tr);}
+
+/* ══ LAYOUT ══ */
+.app{display:flex;height:100vh;overflow:hidden;}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sbw);flex-shrink:0;
+  background:var(--sidebar);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transition:background var(--tr),border-color var(--tr);
+  z-index:10;
+}
+.sb-brand{padding:1.4rem 1.3rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.sb-logo{width:34px;height:34px;flex-shrink:0;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px var(--aglow);}
+.sb-logo svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;}
+.sb-title{font-family:'Clash Display',sans-serif;font-size:1.1rem;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+.sb-nav{flex:1;overflow-y:auto;padding:0.8rem;}
+.nav-section-title{font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--tlo);padding:0.6rem 0.5rem 0.3rem;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;transition:all 0.18s;color:var(--tmd);font-size:0.82rem;font-weight:500;text-decoration:none;}
+.nav-item:hover{background:var(--surface2);color:var(--thi);}
+.nav-item.active{background:linear-gradient(135deg,var(--aglow),rgba(167,139,250,0.1));color:var(--thi);border:1px solid var(--border2);}
+.nav-item svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:0.58rem;padding:1px 6px;border-radius:100px;font-weight:700;}
+
+.sb-footer{padding:0.9rem 1rem;border-top:1px solid var(--border);flex-shrink:0;}
+.user-chip{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:9px;background:var(--surface2);border:1px solid var(--border);}
+.avatar{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0;}
+.user-info{flex:1;min-width:0;}
+.user-name{font-size:0.78rem;font-weight:700;color:var(--thi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-role{font-size:0.62rem;color:var(--tlo);}
+.live-badge{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:livePulse 2.2s ease-in-out infinite;}
+@keyframes livePulse{0%,100%{box-shadow:0 0 0 0 rgba(34,211,122,0.5)}60%{box-shadow:0 0 0 4px rgba(34,211,122,0)}}
+
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* Topbar */
+.topbar{height:58px;flex-shrink:0;background:var(--topbar);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;transition:background var(--tr),border-color var(--tr);}
+.topbar-left{flex:1;}
+.topbar-title{font-family:'Clash Display',sans-serif;font-size:1rem;font-weight:600;color:var(--thi);}
+.topbar-sub{font-size:0.78rem;color:var(--tmd);font-weight:400;margin-top:1px;}
+.topbar-actions{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.18s;color:var(--tmd);}
+.icon-btn:hover{border-color:var(--accent);color:var(--thi);}
+.icon-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+.theme-toggle{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:3px;cursor:pointer;transition:border-color var(--tr);}
+.theme-toggle:hover{border-color:var(--accent);}
+.t-opt{width:26px;height:26px;border-radius:100px;display:flex;align-items:center;justify-content:center;transition:all 0.22s;}
+.t-opt svg{width:12px;height:12px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.22s;}
+.t-opt.active{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 2px 8px var(--aglow);}
+.t-opt.active svg{stroke:#fff;}
+.t-opt:not(.active) svg{stroke:var(--tlo);}
+
+/* ══ CONTENT ══ */
+.content{flex:1;overflow-y:auto;padding:1.5rem;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+
+/* ══ PAGE HEADER ══ */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:1rem;}
+.page-header-left{}
+.page-header h1{font-family:'Clash Display',sans-serif;font-size:1.4rem;font-weight:700;color:var(--thi);letter-spacing:-0.3px;}
+.page-header p{font-size:0.8rem;color:var(--tmd);margin-top:3px;}
+.sos-btn{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(240,82,82,0.08);border:1px solid rgba(240,82,82,0.22);
+  padding:8px 16px;border-radius:10px;cursor:pointer;transition:all 0.2s;flex-shrink:0;
+}
+.sos-btn:hover{background:rgba(240,82,82,0.16);border-color:rgba(240,82,82,0.4);}
+.sos-btn-dot{width:8px;height:8px;background:var(--red);border-radius:50%;animation:sosBlink 1.2s ease-in-out infinite;}
+@keyframes sosBlink{0%,100%{opacity:1}50%{opacity:0.2}}
+.sos-btn span{font-size:0.78rem;font-weight:700;color:var(--red);}
+
+/* ══ STEPPER ══ */
+.stepper{display:flex;align-items:center;gap:0;margin-bottom:1.8rem;}
+.step{display:flex;align-items:center;gap:0;flex:1;}
+.step:last-child{flex:none;}
+.step-node{
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+.step-circle{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Clash Display',sans-serif;font-size:0.75rem;font-weight:700;
+  border:2px solid var(--border2);background:var(--surface2);color:var(--tlo);
+  transition:all 0.3s;flex-shrink:0;
+}
+.step-circle.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 4px var(--aglow);}
+.step-circle.done{background:var(--green);border-color:var(--green);color:#fff;}
+.step-label{font-size:0.72rem;font-weight:600;color:var(--tlo);transition:color 0.3s;white-space:nowrap;}
+.step-label.active{color:var(--thi);}
+.step-label.done{color:var(--green);}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 10px;transition:background 0.3s;}
+.step-line.done{background:var(--green);}
+
+/* ══ FORM LAYOUT ══ */
+.form-wrap{display:grid;grid-template-columns:1fr 320px;gap:1.2rem;align-items:start;}
+
+/* ══ FORM STEPS ══ */
+.form-step{display:none;animation:fadeUp 0.35s ease both;}
+.form-step.active{display:flex;flex-direction:column;gap:1rem;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.4rem;transition:background var(--tr),border-color var(--tr);}
+.form-card-title{font-family:'Clash Display',sans-serif;font-size:0.92rem;font-weight:600;color:var(--thi);margin-bottom:1.1rem;display:flex;align-items:center;gap:8px;}
+.form-card-title svg{width:15px;height:15px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;}
+
+/* ══ FORM ELEMENTS ══ */
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--tmd);}
+.field label .req{color:var(--red);margin-left:2px;}
+.field-hint{font-size:0.68rem;color:var(--tlo);margin-top:2px;}
+
+.input,.textarea,.select{
+  width:100%;background:var(--input-bg);border:1px solid var(--input-bd);
+  border-radius:10px;color:var(--thi);font-family:'Cabinet Grotesk',sans-serif;
+  font-size:0.85rem;outline:none;transition:all var(--tr);
+}
+.input{height:44px;padding:0 12px;}
+.textarea{padding:10px 12px;resize:vertical;min-height:100px;line-height:1.5;}
+.select{height:44px;padding:0 12px;cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237d8aaa' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;}
+.input:focus,.textarea:focus,.select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--input-focus);}
+.input::placeholder,.textarea::placeholder{color:var(--tlo);}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;}
+
+/* ══ CATEGORY GRID ══ */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.cat-card{
+  border:1px solid var(--border);border-radius:12px;
+  padding:12px 10px;text-align:center;cursor:pointer;
+  transition:all 0.2s;background:var(--surface2);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.cat-card:hover{border-color:var(--border2);background:var(--card);}
+.cat-card.selected{border-color:var(--accent);background:rgba(91,143,249,0.08);box-shadow:0 0 0 3px var(--aglow);}
+.cat-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.cat-name{font-size:0.72rem;font-weight:700;color:var(--thi);}
+.cat-desc{font-size:0.6rem;color:var(--tlo);line-height:1.3;}
+
+/* ══ PRIORITY SELECTOR ══ */
+.priority-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.pri-card{
+  border:1px solid var(--border);border-radius:10px;
+  padding:10px 8px;text-align:center;cursor:pointer;
+  transition:all 0.2s;background:var(--surface2);
+}
+.pri-card:hover{border-color:var(--border2);}
+.pri-card.selected-low{border-color:#64748b;background:rgba(100,116,139,0.1);box-shadow:0 0 0 3px rgba(100,116,139,0.15);}
+.pri-card.selected-medium{border-color:var(--accent);background:var(--aglow);box-shadow:0 0 0 3px var(--aglow);}
+.pri-card.selected-high{border-color:#f59e0b;background:rgba(245,158,11,0.08);box-shadow:0 0 0 3px rgba(245,158,11,0.15);}
+.pri-card.selected-critical{border-color:var(--red);background:var(--rglow);box-shadow:0 0 0 3px var(--rglow);}
+.pri-dot-large{width:10px;height:10px;border-radius:50%;margin:0 auto 5px;}
+.pri-label{font-size:0.72rem;font-weight:700;color:var(--thi);}
+.pri-sub{font-size:0.6rem;color:var(--tlo);margin-top:2px;}
+
+/* ══ PHOTO UPLOAD ══ */
+.upload-area{
+  border:2px dashed var(--border2);border-radius:12px;
+  padding:1.5rem 1rem;text-align:center;cursor:pointer;
+  transition:all 0.2s;background:var(--surface2);position:relative;
+}
+.upload-area:hover{border-color:var(--accent);background:rgba(91,143,249,0.04);}
+.upload-area.dragover{border-color:var(--accent);background:var(--aglow);}
+.upload-area svg{width:32px;height:32px;fill:none;stroke:var(--tlo);stroke-width:1.5;stroke-linecap:round;margin:0 auto 0.7rem;display:block;}
+.upload-area h4{font-size:0.82rem;font-weight:700;color:var(--tmd);margin-bottom:3px;}
+.upload-area p{font-size:0.72rem;color:var(--tlo);}
+.upload-area .upload-link{color:var(--accent);font-weight:700;cursor:pointer;}
+.upload-area input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+
+.photo-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:0.8rem;}
+.photo-thumb{
+  aspect-ratio:1;border-radius:8px;background:var(--card2);
+  border:1px solid var(--border);position:relative;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;}
+.photo-thumb .remove-btn{
+  position:absolute;top:4px;right:4px;
+  width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,0.6);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-size:10px;color:#fff;border:none;transition:background 0.15s;
+}
+.photo-thumb .remove-btn:hover{background:var(--red);}
+.photo-add{background:var(--surface2);border:1px dashed var(--border2);cursor:pointer;color:var(--tlo);font-size:20px;transition:all 0.2s;}
+.photo-add:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ══ LOCATION TAGS ══ */
+.location-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.loc-tag{
+  padding:4px 12px;border-radius:100px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--tmd);
+  font-size:0.72rem;font-weight:500;cursor:pointer;transition:all 0.18s;
+}
+.loc-tag:hover{border-color:var(--accent);color:var(--thi);}
+.loc-tag.selected{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* ══ REVIEW CARD ══ */
+.review-section{display:flex;flex-direction:column;gap:0.8rem;}
+.review-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:0.9rem 1rem;}
+.review-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--tlo);margin-bottom:5px;}
+.review-val{font-size:0.85rem;font-weight:600;color:var(--thi);}
+.review-val.desc{font-weight:400;font-size:0.8rem;color:var(--tmd);line-height:1.5;}
+
+/* ══ RIGHT SIDEBAR ══ */
+.right-sidebar{display:flex;flex-direction:column;gap:1rem;}
+.tip-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;transition:background var(--tr),border-color var(--tr);}
+.tip-card-title{font-family:'Clash Display',sans-serif;font-size:0.82rem;font-weight:600;color:var(--thi);margin-bottom:0.8rem;display:flex;align-items:center;gap:7px;}
+.tip-card-title svg{width:14px;height:14px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;}
+.tip-list{display:flex;flex-direction:column;gap:0.55rem;}
+.tip-item{display:flex;align-items:flex-start;gap:8px;font-size:0.75rem;color:var(--tmd);line-height:1.4;}
+.tip-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px;}
+
+.progress-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;}
+.prog-steps{display:flex;flex-direction:column;gap:0.7rem;margin-top:0.6rem;}
+.prog-step-item{display:flex;align-items:center;gap:10px;}
+.prog-step-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0;transition:all 0.3s;}
+.prog-step-num.done{background:var(--green);color:#fff;}
+.prog-step-num.current{background:var(--accent);color:#fff;box-shadow:0 0 0 3px var(--aglow);}
+.prog-step-num.pending{background:var(--surface2);border:1px solid var(--border);color:var(--tlo);}
+.prog-step-text{font-size:0.75rem;font-weight:500;transition:color 0.3s;}
+.prog-step-text.done{color:var(--green);}
+.prog-step-text.current{color:var(--thi);font-weight:700;}
+.prog-step-text.pending{color:var(--tlo);}
+
+/* ══ NAV BUTTONS ══ */
+.nav-btns{display:flex;align-items:center;justify-content:space-between;margin-top:0.5rem;}
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 20px;border-radius:10px;border:none;
+  font-family:'Cabinet Grotesk',sans-serif;font-size:0.85rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 16px var(--aglow);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--aglow);}
+.btn-ghost{background:var(--surface2);color:var(--tmd);border:1px solid var(--border);}
+.btn-ghost:hover{color:var(--thi);border-color:var(--border2);}
+.btn-ghost:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-success{background:var(--green);color:#fff;box-shadow:0 4px 16px var(--gglow);}
+.btn-success:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--gglow);}
+.btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;}
+
+/* ══ SUCCESS STATE ══ */
+.success-screen{display:none;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1rem;text-align:center;animation:fadeUp 0.5s ease both;}
+.success-screen.show{display:flex;}
+.success-icon{width:72px;height:72px;border-radius:50%;background:rgba(34,211,122,0.12);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;animation:successPop 0.5s 0.1s ease both;}
+@keyframes successPop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+.success-icon svg{width:32px;height:32px;fill:none;stroke:var(--green);stroke-width:2.5;stroke-linecap:round;}
+.success-screen h2{font-family:'Clash Display',sans-serif;font-size:1.6rem;font-weight:700;color:var(--thi);letter-spacing:-0.3px;margin-bottom:0.5rem;}
+.success-screen p{font-size:0.85rem;color:var(--tmd);max-width:380px;line-height:1.6;margin-bottom:0.4rem;}
+.ticket-ref{display:inline-flex;align-items:center;gap:8px;background:var(--aglow);border:1px solid var(--accent);border-radius:8px;padding:6px 16px;font-family:'Clash Display',sans-serif;font-size:0.9rem;font-weight:700;color:var(--accent);margin:0.8rem 0 1.5rem;}
+.success-actions{display:flex;gap:0.8rem;}
+
+/* ══ CHAR COUNTER ══ */
+.char-counter{font-size:0.65rem;color:var(--tlo);text-align:right;margin-top:3px;}
+.char-counter.warn{color:var(--amber);}
+.char-counter.over{color:var(--red);}
+
+/* active state indicator */
+.cat-card.selected .cat-check{display:flex;}
+.cat-check{display:none;position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;background:var(--accent);align-items:center;justify-content:center;}
+.cat-card{position:relative;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <span class="sb-title">HostelCare</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-section-title">Navigation</div>
+    <a class="nav-item" href="dashboard.html">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Overview
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>My Tickets
+      <span class="nav-badge">3</span>
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>File Complaint
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>Notifications
+      <span class="nav-badge">2</span>
+    </a>
+  </nav>
+  <div class="sb-footer">
+    <div class="user-chip">
+      <div class="avatar">RA</div>
+      <div class="user-info">
+        <div class="user-name">Rahul Arora</div>
+        <div class="user-role">Student · BH-1</div>
+      </div>
+      <div class="live-badge"></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title">File a Complaint</div>
+      <div class="topbar-sub">Report a maintenance issue in your hostel</div>
+    </div>
+    <div class="topbar-actions">
+      <div class="icon-btn" title="Notifications">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </div>
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <div class="t-opt active" id="moonOpt"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div>
+        <div class="t-opt" id="sunOpt"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>New Maintenance Request</h1>
+        <p>Fill in the details below. Your complaint will be reviewed within 30 minutes.</p>
+      </div>
+      <div class="sos-btn" onclick="triggerSOS()">
+        <div class="sos-btn-dot"></div>
+        <span>Emergency SOS</span>
+      </div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper" id="stepper">
+      <div class="step">
+        <div class="step-node">
+          <div class="step-circle active" id="sc1">1</div>
+          <div class="step-label active" id="sl1">Category</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+      </div>
+      <div class="step">
+        <div class="step-node">
+          <div class="step-circle" id="sc2">2</div>
+          <div class="step-label" id="sl2">Details</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+      </div>
+      <div class="step">
+        <div class="step-node">
+          <div class="step-circle" id="sc3">3</div>
+          <div class="step-label" id="sl3">Photos</div>
+        </div>
+        <div class="step-line" id="line3"></div>
+      </div>
+      <div class="step">
+        <div class="step-node">
+          <div class="step-circle" id="sc4">4</div>
+          <div class="step-label" id="sl4">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form + right sidebar -->
+    <div class="form-wrap" id="formWrap">
+
+      <!-- LEFT: Steps -->
+      <div>
+
+        <!-- STEP 1: Category & Priority -->
+        <div class="form-step active" id="step1">
+          <div class="form-card">
+            <div class="form-card-title">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+              Select Issue Category
+            </div>
+            <div class="cat-grid" id="catGrid">
+              <div class="cat-card" onclick="selectCat(this,'electrical')">
+                <div class="cat-check">✓</div>
+                <div class="cat-icon" style="background:rgba(245,158,11,0.12)">⚡</div>
+                <div class="cat-name">Electrical</div>
+                <div class="cat-desc">Fans, lights, switches, wiring</div>
+              </div>
+              <div class="cat-card" onclick="selectCat(this,'plumbing')">
+                <div class="cat-check">✓</div>
+                <div class="cat-icon" style="background:rgba(59,130,246,0.12)">🪠</div>
+                <div class="cat-name">Plumbing</div>
+                <div class="cat-desc">Taps, drains, pipes, leaks</div>
+              </div>
+              <div class="cat-card" onclick="selectCat(this,'furniture')">
+                <div class="cat-check">✓</div>
+                <div class="cat-icon" style="background:rgba(167,139,250,0.12)">🪑</div>
+                <div class="cat-name">Furniture</div>
+                <div class="cat-desc">Beds, chairs, desks, wardrobes</div>
+              </div>
+              <div class="cat-card" onclick="selectCat(this,'civil')">
+                <div class="cat-check">✓</div>
+                <div class="cat-icon" style="background:rgba(34,211,122,0.12)">🏗</div>
+                <div class="cat-name">Civil</div>
+                <div class="cat-desc">Walls, cracks, doors, windows</div>
+              </div>
+              <div class="cat-card" onclick="selectCat(this,'cleaning')">
+                <div class="cat-check">✓</div>
+                <div class="cat-icon" style="background:rgba(236,72,153,0.12)">🧹</div>
+                <div class="cat-name">Cleaning</div>
+                <div class="cat-desc">Sanitation, hygiene, waste</div>
+              </div>
+              <div class="cat-card" onclick="selectCat(this,'network')">
+                <div class="cat-check">✓</div>
+                <div class="cat-icon" style="background:rgba(99,102,241,0.12)">📡</div>
+                <div class="cat-name">Network</div>
+                <div class="cat-desc">WiFi, LAN, connectivity</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="form-card-title">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Set Priority Level
+            </div>
+            <div class="priority-grid" id="priGrid">
+              <div class="pri-card" onclick="selectPri(this,'low')">
+                <div class="pri-dot-large" style="background:#64748b"></div>
+                <div class="pri-label">Low</div>
+                <div class="pri-sub">Minor issue</div>
+              </div>
+              <div class="pri-card" onclick="selectPri(this,'medium')">
+                <div class="pri-dot-large" style="background:var(--accent)"></div>
+                <div class="pri-label">Medium</div>
+                <div class="pri-sub">Needs attention</div>
+              </div>
+              <div class="pri-card" onclick="selectPri(this,'high')">
+                <div class="pri-dot-large" style="background:#f59e0b"></div>
+                <div class="pri-label">High</div>
+                <div class="pri-sub">Urgent fix</div>
+              </div>
+              <div class="pri-card" onclick="selectPri(this,'critical')">
+                <div class="pri-dot-large" style="background:var(--red)"></div>
+                <div class="pri-label">Critical</div>
+                <div class="pri-sub">Safety risk</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-btns">
+            <button class="btn btn-ghost" disabled>
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back
+            </button>
+            <button class="btn btn-primary" onclick="goStep(2)">
+              Next: Details <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Details -->
+        <div class="form-step" id="step2">
+          <div class="form-card">
+            <div class="form-card-title">
+              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Issue Details
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.9rem;">
+              <div class="field">
+                <label>Issue Title <span class="req">*</span></label>
+                <input class="input" id="issueTitle" type="text" placeholder="e.g. Fan not working in room 204" oninput="syncReview()"/>
+              </div>
+              <div class="field">
+                <label>Description <span class="req">*</span></label>
+                <textarea class="textarea" id="issueDesc" placeholder="Describe the issue in detail — when did it start, what you've tried, how severe it is…" maxlength="500" oninput="updateCharCount(this,'descCount',500);syncReview()"></textarea>
+                <div class="char-counter" id="descCount">0 / 500</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="form-card-title">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Location Details
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.9rem;">
+              <div class="field-row">
+                <div class="field">
+                  <label>Block / Building <span class="req">*</span></label>
+                  <select class="select" id="locBlock" onchange="syncReview()">
+                    <option value="">Select Block</option>
+                    <option>Block A</option>
+                    <option>Block B</option>
+                    <option>Block C</option>
+                    <option>Common Area</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Floor <span class="req">*</span></label>
+                  <select class="select" id="locFloor" onchange="syncReview()">
+                    <option value="">Select Floor</option>
+                    <option>Ground Floor</option>
+                    <option>Floor 1</option>
+                    <option>Floor 2</option>
+                    <option>Floor 3</option>
+                    <option>Floor 4</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label>Specific Location</label>
+                <input class="input" id="locSpecific" type="text" placeholder="Room number, bathroom block, corridor…" oninput="syncReview()"/>
+                <div class="field-hint">Be specific to help the worker find the issue quickly</div>
+              </div>
+              <div class="field">
+                <label>Quick Tags</label>
+                <div class="location-tags">
+                  <div class="loc-tag" onclick="toggleLocTag(this)">Bathroom</div>
+                  <div class="loc-tag" onclick="toggleLocTag(this)">Corridor</div>
+                  <div class="loc-tag" onclick="toggleLocTag(this)">Common Room</div>
+                  <div class="loc-tag" onclick="toggleLocTag(this)">Staircase</div>
+                  <div class="loc-tag" onclick="toggleLocTag(this)">Terrace</div>
+                  <div class="loc-tag" onclick="toggleLocTag(this)">Mess Area</div>
+                  <div class="loc-tag" onclick="toggleLocTag(this)">Laundry</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-btns">
+            <button class="btn btn-ghost" onclick="goStep(1)">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back
+            </button>
+            <button class="btn btn-primary" onclick="goStep(3)">
+              Next: Photos <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Photos -->
+        <div class="form-step" id="step3">
+          <div class="form-card">
+            <div class="form-card-title">
+              <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Upload "Before" Photo Evidence
+            </div>
+            <p style="font-size:0.75rem;color:var(--tmd);margin-bottom:1rem;line-height:1.5;">A photo of the issue is <strong style="color:var(--thi)">required</strong> for your complaint. This creates accountability and helps the worker understand the problem before arriving.</p>
+
+            <div class="upload-area" id="uploadArea" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleDrop(event)">
+              <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+              <h4>Drop photos here</h4>
+              <p>or <span class="upload-link" onclick="document.getElementById('fileInput').click()">browse your device</span></p>
+              <p style="margin-top:6px;font-size:0.65rem;color:var(--tlo)">JPG, PNG, HEIC — Max 10MB each · Up to 3 photos</p>
+              <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFileSelect(event)"/>
+            </div>
+
+            <div class="photo-preview-grid" id="previewGrid" style="display:none;"></div>
+          </div>
+
+          <div class="form-card" style="background:rgba(91,143,249,0.04);border-color:rgba(91,143,249,0.15);">
+            <div class="form-card-title" style="margin-bottom:0.6rem;">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Photo Guidelines
+            </div>
+            <div class="tip-list">
+              <div class="tip-item"><div class="tip-dot"></div>Take the photo in good lighting so the issue is clearly visible</div>
+              <div class="tip-item"><div class="tip-dot"></div>Include context — show the surroundings, not just a close-up</div>
+              <div class="tip-item"><div class="tip-dot"></div>Multiple angles help — e.g. for a leaking tap, show the tap, the floor, and the pipe</div>
+              <div class="tip-item"><div class="tip-dot"></div>Your photo will be stored securely on Cloudinary</div>
+            </div>
+          </div>
+
+          <div class="nav-btns">
+            <button class="btn btn-ghost" onclick="goStep(2)">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back
+            </button>
+            <button class="btn btn-primary" onclick="goStep(4)">
+              Review & Submit <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Review -->
+        <div class="form-step" id="step4">
+          <div class="form-card">
+            <div class="form-card-title">
+              <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              Review Your Complaint
+            </div>
+            <div class="review-section" id="reviewSection">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="form-card" style="background:rgba(34,211,122,0.04);border-color:rgba(34,211,122,0.15);">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;border-radius:9px;background:rgba(34,211,122,0.12);border:1px solid rgba(34,211,122,0.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg style="width:16px;height:16px;fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div>
+                <div style="font-size:0.82rem;font-weight:700;color:var(--green);">Ready to submit</div>
+                <div style="font-size:0.72rem;color:var(--tmd);margin-top:2px;">Your complaint will be assigned to a worker within 30 minutes. You'll receive a notification once assigned.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-btns">
+            <button class="btn btn-ghost" onclick="goStep(3)">
+              <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back
+            </button>
+            <button class="btn btn-success" onclick="submitComplaint()">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Submit Complaint
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Tips & Progress -->
+      <div class="right-sidebar" id="rightSidebar">
+        <div class="progress-card">
+          <div class="form-card-title" style="margin-bottom:0;">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Filing Progress
+          </div>
+          <div class="prog-steps">
+            <div class="prog-step-item">
+              <div class="prog-step-num current" id="psn1">1</div>
+              <div class="prog-step-text current" id="pst1">Category & Priority</div>
+            </div>
+            <div class="prog-step-item">
+              <div class="prog-step-num pending" id="psn2">2</div>
+              <div class="prog-step-text pending" id="pst2">Issue Details</div>
+            </div>
+            <div class="prog-step-item">
+              <div class="prog-step-num pending" id="psn3">3</div>
+              <div class="prog-step-text pending" id="pst3">Photo Evidence</div>
+            </div>
+            <div class="prog-step-item">
+              <div class="prog-step-num pending" id="psn4">4</div>
+              <div class="prog-step-text pending" id="pst4">Review & Submit</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Tips for Faster Resolution
+          </div>
+          <div class="tip-list">
+            <div class="tip-item"><div class="tip-dot"></div>Be specific about the location — include room number and block</div>
+            <div class="tip-item"><div class="tip-dot"></div>Set the correct priority to help workers triage efficiently</div>
+            <div class="tip-item"><div class="tip-dot"></div>Clear "Before" photos are mandatory and speed up verification</div>
+            <div class="tip-item"><div class="tip-dot"></div>Critical issues get assigned within 15 minutes</div>
+          </div>
+        </div>
+
+        <div class="tip-card" style="background:rgba(240,82,82,0.04);border-color:rgba(240,82,82,0.15);">
+          <div class="tip-card-title" style="color:var(--red);">
+            <svg viewBox="0 0 24 24" style="stroke:var(--red)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Life-Safety Issue?
+          </div>
+          <p style="font-size:0.75rem;color:var(--tmd);line-height:1.5;margin-bottom:0.8rem;">For emergencies like fire, major short circuit, gas leak or security threat — don't file a complaint.</p>
+          <div class="sos-btn" onclick="triggerSOS()" style="width:100%;justify-content:center;">
+            <div class="sos-btn-dot"></div>
+            <span>Trigger Emergency SOS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS SCREEN -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>Complaint Filed!</h2>
+      <p>Your maintenance request has been submitted successfully. The admin will review it and assign a worker shortly.</p>
+      <div class="ticket-ref" id="ticketRef">#HC-2024-042</div>
+      <p style="font-size:0.75rem;">You'll receive a notification once a worker is assigned. Average response time is <strong style="color:var(--green)">under 2 hours</strong>.</p>
+      <div class="success-actions">
+        <button class="btn btn-ghost" onclick="resetForm()">File Another</button>
+        <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">View My Tickets</button>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</main>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let state = {
+  step: 1,
+  category: null,
+  priority: null,
+  title: '',
+  desc: '',
+  block: '',
+  floor: '',
+  specific: '',
+  locTags: [],
+  photos: [],
+};
+
+// ══════════════════════════════════════
+// STEPPER
+// ══════════════════════════════════════
+function goStep(n) {
+  // Validate step 1
+  if (n > 1 && state.step === 1) {
+    if (!state.category) { shake('catGrid', 'Please select a category'); return; }
+    if (!state.priority)  { shake('priGrid', 'Please select a priority level'); return; }
+  }
+  // Validate step 2
+  if (n > 2 && state.step === 2) {
+    const title = document.getElementById('issueTitle').value.trim();
+    const desc  = document.getElementById('issueDesc').value.trim();
+    const block = document.getElementById('locBlock').value;
+    const floor = document.getElementById('locFloor').value;
+    if (!title) { highlight('issueTitle'); return; }
+    if (!desc)  { highlight('issueDesc'); return; }
+    if (!block) { highlight('locBlock'); return; }
+    if (!floor) { highlight('locFloor'); return; }
+    state.title    = title;
+    state.desc     = desc;
+    state.block    = block;
+    state.floor    = floor;
+    state.specific = document.getElementById('locSpecific').value.trim();
+  }
+
+  state.step = n;
+  // Update steps
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  updateStepper(n);
+  updateProgressSidebar(n);
+  if (n === 4) buildReview();
+}
+
+function updateStepper(current) {
+  for (let i = 1; i <= 4; i++) {
+    const circle = document.getElementById('sc' + i);
+    const label  = document.getElementById('sl' + i);
+    circle.classList.remove('active', 'done');
+    label.classList.remove('active', 'done');
+    if (i < current) {
+      circle.classList.add('done');
+      circle.textContent = '✓';
+      label.classList.add('done');
+    } else if (i === current) {
+      circle.classList.add('active');
+      circle.textContent = i;
+      label.classList.add('active');
+    } else {
+      circle.textContent = i;
+    }
+    if (i < 4) {
+      const line = document.getElementById('line' + i);
+      line.classList.toggle('done', i < current);
+    }
+  }
+}
+
+function updateProgressSidebar(current) {
+  for (let i = 1; i <= 4; i++) {
+    const num  = document.getElementById('psn' + i);
+    const text = document.getElementById('pst' + i);
+    num.className  = 'prog-step-num';
+    text.className = 'prog-step-text';
+    if (i < current) {
+      num.classList.add('done');
+      text.classList.add('done');
+      num.textContent = '✓';
+    } else if (i === current) {
+      num.classList.add('current');
+      text.classList.add('current');
+      num.textContent = i;
+    } else {
+      num.classList.add('pending');
+      text.classList.add('pending');
+      num.textContent = i;
+    }
+  }
+}
+
+// ══════════════════════════════════════
+// SELECTION HANDLERS
+// ══════════════════════════════════════
+function selectCat(el, cat) {
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.category = cat;
+}
+
+function selectPri(el, pri) {
+  document.querySelectorAll('.pri-card').forEach(c => {
+    c.classList.remove('selected-low','selected-medium','selected-high','selected-critical');
+  });
+  el.classList.add('selected-' + pri);
+  state.priority = pri;
+}
+
+function toggleLocTag(el) {
+  el.classList.toggle('selected');
+  const tag = el.textContent;
+  if (el.classList.contains('selected')) {
+    state.locTags.push(tag);
+  } else {
+    state.locTags = state.locTags.filter(t => t !== tag);
+  }
+}
+
+// ══════════════════════════════════════
+// PHOTO UPLOAD
+// ══════════════════════════════════════
+function handleFileSelect(e) {
+  const files = Array.from(e.target.files);
+  addPhotos(files);
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadArea').classList.remove('dragover');
+  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+  addPhotos(files);
+}
+function addPhotos(files) {
+  files.slice(0, 3 - state.photos.length).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      state.photos.push(ev.target.result);
+      renderPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function removePhoto(i) {
+  state.photos.splice(i, 1);
+  renderPreviews();
+}
+function renderPreviews() {
+  const grid = document.getElementById('previewGrid');
+  if (state.photos.length === 0) { grid.style.display = 'none'; return; }
+  grid.style.display = 'grid';
+  grid.innerHTML = state.photos.map((src, i) => `
+    <div class="photo-thumb">
+      <img src="${src}" alt="Photo ${i+1}"/>
+      <button class="remove-btn" onclick="removePhoto(${i})">✕</button>
+    </div>`).join('');
+  if (state.photos.length < 3) {
+    grid.innerHTML += `<div class="photo-thumb photo-add" onclick="document.getElementById('fileInput').click()">+</div>`;
+  }
+}
+
+// ══════════════════════════════════════
+// REVIEW
+// ══════════════════════════════════════
+const catNames = {electrical:'⚡ Electrical',plumbing:'🪠 Plumbing',furniture:'🪑 Furniture',civil:'🏗 Civil',cleaning:'🧹 Cleaning',network:'📡 Network'};
+const priNames = {low:'⚪ Low',medium:'🔵 Medium',high:'🟠 High',critical:'🔴 Critical'};
+
+function buildReview() {
+  const locStr = [state.block, state.floor, state.specific, ...state.locTags].filter(Boolean).join(', ');
+  document.getElementById('reviewSection').innerHTML = `
+    <div class="review-item">
+      <div class="review-label">Category</div>
+      <div class="review-val">${catNames[state.category] || state.category}</div>
+    </div>
+    <div class="review-item">
+      <div class="review-label">Priority</div>
+      <div class="review-val">${priNames[state.priority] || state.priority}</div>
+    </div>
+    <div class="review-item">
+      <div class="review-label">Issue Title</div>
+      <div class="review-val">${state.title || '—'}</div>
+    </div>
+    <div class="review-item">
+      <div class="review-label">Description</div>
+      <div class="review-val desc">${state.desc || '—'}</div>
+    </div>
+    <div class="review-item">
+      <div class="review-label">Location</div>
+      <div class="review-val">📍 ${locStr || '—'}</div>
+    </div>
+    <div class="review-item">
+      <div class="review-label">Photos Attached</div>
+      <div class="review-val" style="color:${state.photos.length>0?'var(--green)':'var(--red)'}">${state.photos.length > 0 ? `✓ ${state.photos.length} photo(s) ready` : '✕ No photos — please go back and upload'}</div>
+    </div>`;
+}
+
+function syncReview() {
+  state.title    = document.getElementById('issueTitle').value.trim();
+  state.desc     = document.getElementById('issueDesc').value.trim();
+  state.block    = document.getElementById('locBlock').value;
+  state.floor    = document.getElementById('locFloor').value;
+  state.specific = document.getElementById('locSpecific').value.trim();
+}
+
+// ══════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════
+function submitComplaint() {
+  // Generate ticket ID
+  const ticketNum = 'HC-2024-0' + (Math.floor(Math.random() * 90) + 10);
+  document.getElementById('ticketRef').textContent = '#' + ticketNum;
+  // Hide form, show success
+  document.getElementById('formWrap').style.display = 'none';
+  document.querySelector('.stepper').style.display = 'none';
+  document.querySelector('.page-header').style.display = 'none';
+  document.getElementById('successScreen').classList.add('show');
+}
+
+function resetForm() {
+  state = {step:1,category:null,priority:null,title:'',desc:'',block:'',floor:'',specific:'',locTags:[],photos:[]};
+  document.getElementById('formWrap').style.display = 'grid';
+  document.querySelector('.stepper').style.display = 'flex';
+  document.querySelector('.page-header').style.display = 'flex';
+  document.getElementById('successScreen').classList.remove('show');
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.pri-card').forEach(c => c.classList.remove('selected-low','selected-medium','selected-high','selected-critical'));
+  document.getElementById('issueTitle').value = '';
+  document.getElementById('issueDesc').value = '';
+  document.getElementById('locBlock').value = '';
+  document.getElementById('locFloor').value = '';
+  document.getElementById('locSpecific').value = '';
+  document.getElementById('descCount').textContent = '0 / 500';
+  document.getElementById('previewGrid').style.display = 'none';
+  document.getElementById('previewGrid').innerHTML = '';
+  goStep(1);
+}
+
+// ══════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════
+function updateCharCount(el, counterId, max) {
+  const len = el.value.length;
+  const counter = document.getElementById(counterId);
+  counter.textContent = len + ' / ' + max;
+  counter.className = 'char-counter' + (len > max * 0.9 ? (len >= max ? ' over' : ' warn') : '');
+}
+
+function highlight(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = 'var(--red)';
+  el.style.boxShadow = '0 0 0 3px var(--rglow)';
+  el.focus();
+  setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 2000);
+}
+
+function shake(id, msg) {
+  const el = document.getElementById(id);
+  el.style.animation = 'none';
+  el.offsetHeight;
+  el.style.animation = 'shakeX 0.4s ease';
+  setTimeout(() => el.style.animation = '', 400);
+}
+
+function triggerSOS() {
+  const btn = document.querySelector('.page-header .sos-btn');
+  if (btn) {
+    btn.querySelector('span').textContent = 'SOS Sent!';
+    setTimeout(() => btn.querySelector('span').textContent = 'Emergency SOS', 3000);
+  }
+  alert('🚨 Emergency SOS triggered! Security and all admins have been notified immediately.');
+}
+
+// ══════════════════════════════════════
+// THEME
+// ══════════════════════════════════════
+let isDark = true;
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('moonOpt').classList.toggle('active', isDark);
+  document.getElementById('sunOpt').classList.toggle('active', !isDark);
+}
+
+// CSS for shake
+const style = document.createElement('style');
+style.textContent = `@keyframes shakeX{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
